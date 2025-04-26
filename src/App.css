@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+:root {
+  --light-grey-clr: #f5f5f5;
+  --light-green-clr: #36e18d;
+  --dark-green-clr: #22955c;
+  --orange-clr: #f6ad49;
+  --yellow-clr: #f6ad49;
+  --dark-orange-clr: #da6c33;
+  --black-clr: #47382a;
+  --red-clr: #d21010;
+  --grey-clr: #a5a5a5;
+  --dark-blue-clr: #040a3e;
+}
+
+@theme {
+  --color-light-grey-clr: var(--light-grey-clr);
+  --color-light-green-clr: var(--light-green-clr);
+  --color-dark-green-clr: var(--dark-green-clr);
+  --color-dark-orange-clr: var(--dark-orange-clr);
+  --color-orange-clr: var(--orange-clr);
+  --color-black-clr: var(--black-clr);
+  --color-red-clr: var(--red-clr);
+  --color-grey-clr: var(--grey-clr);
+  --color-dark-blue-clr: var(--dark-blue-clr);
+  --color-yellow-clr: var(--yellow-clr);
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  color: var(--black-clr);
+}
