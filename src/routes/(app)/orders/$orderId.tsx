@@ -78,7 +78,7 @@ function RouteComponent() {
           >
             <li>
               <button
-                className="btn btn-ghost font-normal"
+                className="btn btn-ghost font-normal shadow-none"
                 onClick={() => handleShowModal("info")}
               >
                 <InfoCircledIcon />
@@ -129,12 +129,16 @@ function RouteComponent() {
           </p>
         </div>
         <span className="divider divider-horizontal" />
-        <div className="space-y-2 w-full">
-          <div className="flex items-center space-x-2 text-info">
-            <AvatarIcon />
-            <small className="text-xs font-light">Buyer:</small>
+        <div className="flex items-center space-x-6 w-full">
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2 text-info">
+              <AvatarIcon />
+              <small className="text-xs font-light">Buyer:</small>
+            </div>
+            <p className="text-sm">John Doe</p>
           </div>
-          <p className="text-sm">John Doe</p>
+
+          <button className="btn btn-sm font-normal">View Buyer Info</button>
         </div>
       </div>
 

@@ -15,6 +15,8 @@ import { Route as IndexImport } from './routes/index'
 import { Route as appRegionsIndexImport } from './routes/(app)/regions/index'
 import { Route as appProfileIndexImport } from './routes/(app)/profile/index'
 import { Route as appOrdersIndexImport } from './routes/(app)/orders/index'
+import { Route as appNotificationsIndexImport } from './routes/(app)/notifications/index'
+import { Route as appFinanceIndexImport } from './routes/(app)/finance/index'
 import { Route as appOrdersOrderIdImport } from './routes/(app)/orders/$orderId'
 
 // Create/Update Routes
@@ -43,6 +45,18 @@ const appOrdersIndexRoute = appOrdersIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const appNotificationsIndexRoute = appNotificationsIndexImport.update({
+  id: '/(app)/notifications/',
+  path: '/notifications/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const appFinanceIndexRoute = appFinanceIndexImport.update({
+  id: '/(app)/finance/',
+  path: '/finance/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const appOrdersOrderIdRoute = appOrdersOrderIdImport.update({
   id: '/(app)/orders/$orderId',
   path: '/orders/$orderId',
@@ -65,6 +79,20 @@ declare module '@tanstack/react-router' {
       path: '/orders/$orderId'
       fullPath: '/orders/$orderId'
       preLoaderRoute: typeof appOrdersOrderIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/(app)/finance/': {
+      id: '/(app)/finance/'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof appFinanceIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/(app)/notifications/': {
+      id: '/(app)/notifications/'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof appNotificationsIndexImport
       parentRoute: typeof rootRoute
     }
     '/(app)/orders/': {
@@ -96,6 +124,8 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/finance': typeof appFinanceIndexRoute
+  '/notifications': typeof appNotificationsIndexRoute
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
@@ -104,6 +134,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/finance': typeof appFinanceIndexRoute
+  '/notifications': typeof appNotificationsIndexRoute
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
@@ -113,6 +145,8 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/(app)/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/(app)/finance/': typeof appFinanceIndexRoute
+  '/(app)/notifications/': typeof appNotificationsIndexRoute
   '/(app)/orders/': typeof appOrdersIndexRoute
   '/(app)/profile/': typeof appProfileIndexRoute
   '/(app)/regions/': typeof appRegionsIndexRoute
@@ -120,13 +154,29 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/orders/$orderId' | '/orders' | '/profile' | '/regions'
+  fullPaths:
+    | '/'
+    | '/orders/$orderId'
+    | '/finance'
+    | '/notifications'
+    | '/orders'
+    | '/profile'
+    | '/regions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/orders/$orderId' | '/orders' | '/profile' | '/regions'
+  to:
+    | '/'
+    | '/orders/$orderId'
+    | '/finance'
+    | '/notifications'
+    | '/orders'
+    | '/profile'
+    | '/regions'
   id:
     | '__root__'
     | '/'
     | '/(app)/orders/$orderId'
+    | '/(app)/finance/'
+    | '/(app)/notifications/'
     | '/(app)/orders/'
     | '/(app)/profile/'
     | '/(app)/regions/'
@@ -136,6 +186,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appOrdersOrderIdRoute: typeof appOrdersOrderIdRoute
+  appFinanceIndexRoute: typeof appFinanceIndexRoute
+  appNotificationsIndexRoute: typeof appNotificationsIndexRoute
   appOrdersIndexRoute: typeof appOrdersIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
   appRegionsIndexRoute: typeof appRegionsIndexRoute
@@ -144,6 +196,8 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appOrdersOrderIdRoute: appOrdersOrderIdRoute,
+  appFinanceIndexRoute: appFinanceIndexRoute,
+  appNotificationsIndexRoute: appNotificationsIndexRoute,
   appOrdersIndexRoute: appOrdersIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
   appRegionsIndexRoute: appRegionsIndexRoute,
@@ -161,6 +215,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/(app)/orders/$orderId",
+        "/(app)/finance/",
+        "/(app)/notifications/",
         "/(app)/orders/",
         "/(app)/profile/",
         "/(app)/regions/"
@@ -171,6 +227,12 @@ export const routeTree = rootRoute
     },
     "/(app)/orders/$orderId": {
       "filePath": "(app)/orders/$orderId.tsx"
+    },
+    "/(app)/finance/": {
+      "filePath": "(app)/finance/index.tsx"
+    },
+    "/(app)/notifications/": {
+      "filePath": "(app)/notifications/index.tsx"
     },
     "/(app)/orders/": {
       "filePath": "(app)/orders/index.tsx"

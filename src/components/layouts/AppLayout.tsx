@@ -1,10 +1,10 @@
 import { IMAGES } from "@/constants";
 import {
+  AvatarIcon,
   BackpackIcon,
-  EnterIcon,
   FileTextIcon,
-  HomeIcon,
-  MixerHorizontalIcon,
+  LayersIcon,
+  PieChartIcon,
   SpeakerModerateIcon,
 } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
@@ -29,12 +29,12 @@ export default function AppLayout({
     {
       title: "Orders",
       href: "/orders",
-      icon: <EnterIcon />,
+      icon: <PieChartIcon />,
     },
     {
       title: "Service Regions",
       href: "/regions",
-      icon: <HomeIcon />,
+      icon: <LayersIcon />,
     },
     {
       title: "Finance",
@@ -49,7 +49,7 @@ export default function AppLayout({
     {
       title: "Profile",
       href: "/profile",
-      icon: <MixerHorizontalIcon />,
+      icon: <AvatarIcon />,
     },
   ];
   return (

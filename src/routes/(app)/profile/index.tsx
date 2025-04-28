@@ -138,7 +138,7 @@ function RouteComponent() {
             </label>
 
             <button
-              className="btn border-yellow-clr text-yellow-clr bg-transparent hover:bg-yellow-clr hover:text-white"
+              className="btn bg-dark-green-clr text-white font-normal border-0"
               type="submit"
             >
               Save Changes
