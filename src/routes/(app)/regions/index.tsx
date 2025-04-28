@@ -1,10 +1,6 @@
 import AppLayout from "@/components/layouts/AppLayout";
 import { AllRegions } from "@/lib/regions";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
