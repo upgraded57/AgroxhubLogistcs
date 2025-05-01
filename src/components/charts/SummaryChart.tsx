@@ -5,7 +5,6 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
 } from "recharts";
 
 export default function SummaryChart() {
@@ -50,7 +49,6 @@ export default function SummaryChart() {
     <ResponsiveContainer height={400}>
       <BarChart data={data}>
         <XAxis dataKey="name" />
-        <YAxis />
         <Tooltip />
         <Legend />
         <Bar dataKey="pv" fill="#8884d8" />

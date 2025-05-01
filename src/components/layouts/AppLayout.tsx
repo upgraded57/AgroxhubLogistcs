@@ -1,13 +1,17 @@
 import { IMAGES } from "@/constants";
 import {
+  ArchiveIcon,
   AvatarIcon,
   BackpackIcon,
+  Cross1Icon,
   FileTextIcon,
+  HamburgerMenuIcon,
   LayersIcon,
   PieChartIcon,
   SpeakerModerateIcon,
 } from "@radix-ui/react-icons";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 export default function AppLayout({
   children,
@@ -20,69 +24,16 @@ export default function AppLayout({
   subtitle: string;
   actions?: React.ReactNode;
 }) {
-  const links = [
-    {
-      title: "Dashboard",
-      href: "/",
-      icon: <FileTextIcon />,
-    },
-    {
-      title: "Orders",
-      href: "/orders",
-      icon: <PieChartIcon />,
-    },
-    {
-      title: "Service Regions",
-      href: "/regions",
-      icon: <LayersIcon />,
-    },
-    {
-      title: "Finance",
-      href: "/finance",
-      icon: <BackpackIcon />,
-    },
-    {
-      title: "Notifications",
-      href: "/notifications",
-      icon: <SpeakerModerateIcon />,
-    },
-    {
-      title: "Profile",
-      href: "/profile",
-      icon: <AvatarIcon />,
-    },
-  ];
+  const [navOpen, setNavOpen] = useState(false);
   return (
     <div className="w-full h-screen bg-white flex items-start space-y-6 overflow-y-hidden">
-      {/* Sidebar */}
-      <aside className="min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr flex flex-col justify-between">
+      {/* Sidebar Large Screen */}
+      <aside className="hidden min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr lg:flex flex-col justify-between">
         <div>
           <div className="h-[70px] w-full flex items-center justify-center">
             <img src={IMAGES.logo} alt="Agroxhub" className="w-[148px]" />
           </div>
-          {links.map((item, idx) => (
-            <Link to={item.href} key={idx}>
-              {({ isActive }) => (
-                <div className="flex items-center space-x-4 py-4">
-                  {isActive && (
-                    <span className="w-1 h-7 rounded bg-dark-green-clr m-0" />
-                  )}
-                  <div className="flex items-center space-x-4 pl-6">
-                    <span
-                      className={`text scale-110 ${isActive ? "text-dark-green-clr" : "text-grey-clr"}`}
-                    >
-                      {item.icon}
-                    </span>
-                    <p
-                      className={`text-sm ${isActive ? "font-medium" : "font-light text-grey-clr"}`}
-                    >
-                      {item.title}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </Link>
-          ))}
+          <NavLinks />
         </div>
         <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
           <div className="flex items-center space-x-3">
@@ -101,16 +52,116 @@ export default function AppLayout({
       </aside>
 
       {/* Main */}
-      <main className="w-full h-full overflow-y-scroll p-6 bg-light-grey-clr">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1 mb-6">
-            <h2 className="font-medium text-lg">{title}</h2>
-            <p className="text-sm font-light">{subtitle}</p>
+      <div className="w-full h-full overflow-y-scroll bg-light-grey-clr">
+        {/* Topbar - Small Screen */}
+        <div className="w-full bg-white flex justify-between items-center lg:hidden shadow mb-4 h-15 px-4 sticky top-0 z-[20]">
+          <div className="flex space-x-2 items-center">
+            <button
+              className="btn btn-square bg-transparent p-2 h-auto w-auto btn-ghost"
+              onClick={() => setNavOpen((prev) => !prev)}
+            >
+              {navOpen ? <Cross1Icon /> : <HamburgerMenuIcon />}
+            </button>
+            <img
+              src={IMAGES.logo}
+              alt="Agroxhub"
+              className="w-[140px] h-auto"
+            />
           </div>
-          {actions}
+          <div className="avatar">
+            <div className="w-10 rounded-full">
+              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            </div>
+          </div>
         </div>
-        {children}
-      </main>
+
+        {/* Sidebar small screen */}
+        <div
+          className={`fixed top-15 w-full z-10 h-screen bg-black/50 transition-all ${navOpen ? "left-0" : "-left-[100%]"}`}
+        >
+          <div
+            className={`w-[300px] border-t-[1px] border-t-light-grey-clr h-full bg-white shadow-lg`}
+          >
+            <NavLinks />
+          </div>
+        </div>
+
+        {/* Content */}
+        <main className="px-4 lg:p-6">
+          <div className="flex flex-col lg:flex-row items-start space-y-4 lg:space-y-0 justify-start lg:items-center lg:justify-between mb-6">
+            <div className="space-y-1">
+              <h2 className="font-medium text-lg">{title}</h2>
+              <p className="text-sm font-light">{subtitle}</p>
+            </div>
+            {actions}
+          </div>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
+
+const NavLinks = () => {
+  const links = [
+    {
+      title: "Dashboard",
+      href: "/",
+      icon: <FileTextIcon />,
+    },
+    {
+      title: "Orders",
+      href: "/orders",
+      icon: <PieChartIcon />,
+    },
+    {
+      title: "Service Regions",
+      href: "/regions",
+      icon: <LayersIcon />,
+    },
+    {
+      title: "Deliverables",
+      href: "/deliverables",
+      icon: <ArchiveIcon />,
+    },
+    {
+      title: "Finance",
+      href: "/finance",
+      icon: <BackpackIcon />,
+    },
+    {
+      title: "Notifications",
+      href: "/notifications",
+      icon: <SpeakerModerateIcon />,
+    },
+    {
+      title: "Profile",
+      href: "/profile",
+      icon: <AvatarIcon />,
+    },
+  ];
+
+  return links.map((item, idx) => (
+    <Link to={item.href} key={idx}>
+      {({ isActive }) => (
+        <div className="flex items-center space-x-4 py-4">
+          {isActive && (
+            <span className="w-1 h-7 rounded bg-dark-green-clr m-0" />
+          )}
+          <div className="flex items-center space-x-4 pl-6">
+            <span
+              className={`text scale-110 ${isActive ? "text-dark-green-clr" : "text-grey-clr"}`}
+            >
+              {item.icon}
+            </span>
+            <p
+              className={`text-sm ${isActive ? "font-medium" : "font-light text-grey-clr"}`}
+            >
+              {item.title}
+            </p>
+          </div>
+        </div>
+      )}
+    </Link>
+  ));
+};

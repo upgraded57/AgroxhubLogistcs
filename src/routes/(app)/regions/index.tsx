@@ -84,12 +84,14 @@ function RouteComponent() {
     <AppLayout
       title="Service Regions"
       subtitle="Update your service regions. Click a region to select/deselect it"
-      actions=<button
-        className="btn bg-dark-green-clr text-white font-normal border-0"
-        onClick={handleUpdateServiceRegions}
-      >
-        Save Changes
-      </button>
+      actions={
+        <button
+          className="btn bg-dark-green-clr text-white font-normal border-0"
+          onClick={handleUpdateServiceRegions}
+        >
+          Save Changes
+        </button>
+      }
     >
       <>
         {groupedItems.map((item, idx) => {
@@ -122,7 +124,7 @@ function RouteComponent() {
                       <ChevronDownIcon />
                     )}
                   </span>
-                  <span className="space-x-4 flex items-center">
+                  <span className="space-x-4 flex flex-col lg:flex-row lg:items-center">
                     <p className="text-sm">{item.lcda}</p>
                     <p className="text-sm text-grey-clr font-light">
                       ({selectedCount} of {totalCount} regions Selected)
@@ -137,7 +139,7 @@ function RouteComponent() {
                   <input
                     type="checkbox"
                     checked={allSelected}
-                    className="toggle toggle-xs checked:text-dark-green-clr"
+                    className="toggle toggle-xs checked:text-white checked:bg-dark-green-clr"
                     onChange={() =>
                       allSelected
                         ? handleDeselectAll(item.lcda)

@@ -18,13 +18,12 @@ function App() {
   return (
     <AppLayout title="Overview" subtitle="Your account at a glance">
       <Summary />
-
       {/* Chart and Earnings Table */}
-      <div className="flex items-stretch my-6 space-x-6 w-full">
-        <div className="rounded-lg shadow p-4 bg-white flex-7/10">
+      <div className="flex flex-col lg:flex-row items-stretch my-6 gap-6 w-full">
+        <div className="rounded-lg shadow p-4 bg-white lg:flex-7/10 w-full">
           <SummaryChart />
         </div>
-        <div className="rounded-lg shadow p-4 bg-white flex-3/10 ">
+        <div className="rounded-lg shadow p-4 bg-white lg:flex-3/10 ">
           <p className="text-sm font-medium mb-2">Earnings</p>
           <EarningsTable />
         </div>
@@ -36,7 +35,7 @@ function App() {
           <p className="text-sm font-medium">Recent Orders</p>
 
           {/* Recent orders badges */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <span className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-light-green-clr border-2 border-dark-green-clr" />
               <p className="text-sm font-light">Delivered</p>
@@ -54,7 +53,7 @@ function App() {
               <p className="text-sm font-light">Returned</p>
             </span>
           </div>
-          <Link to="." className="flex items-center space-x-1">
+          <Link to="/orders" className="flex items-center space-x-1">
             <p className="text-sm underline">See All</p>
             <ArrowRightIcon />
           </Link>
@@ -111,7 +110,7 @@ const Summary = () => {
   return (
     <div className="stats bg-white w-full shadow">
       {stats.map((item, idx) => (
-        <div className="stat" key={idx}>
+        <div className="stat min-w-[200px]" key={idx}>
           <div className="stat-title">{item.title}</div>
           <div className="stat-value text-dark-green-clr my-1 pl-2">
             {item.count}
@@ -133,7 +132,7 @@ const Summary = () => {
 
 const RatingComp = () => {
   return (
-    <div className="flex items-start space-x-20">
+    <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-20">
       <div className="flex items-center space-x-3">
         <div className="avatar">
           <div className="w-12 rounded-full">

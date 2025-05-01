@@ -11,7 +11,7 @@ import {
 } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/(app)/orders/$orderId")({
   component: RouteComponent,
@@ -65,7 +65,7 @@ function RouteComponent() {
       title={`Order ${orderId}`}
       subtitle="Manage and complete this order"
       actions={
-        <div className="dropdown dropdown-end">
+        <div className="dropdown lg:dropdown-end">
           <div tabIndex={0} role="button">
             <button className="btn font-normal bg-white rounded-lg">
               <CaretDownIcon />
@@ -108,8 +108,8 @@ function RouteComponent() {
       }
     >
       {/* Pickup and delivery address */}
-      <div className="bg-white w-full shadow mb-6 flex items-center p-4 rounded-lg">
-        <div className="space-y-2 w-full">
+      <div className="bg-white w-full shadow mb-6 flex items-center p-4 rounded-lg overflow-x-scroll">
+        <div className="space-y-2 w-full min-w-[300px]">
           <div className="flex items-center space-x-2 text-yellow-clr">
             <RadiobuttonIcon />
             <small className="text-xs font-light">Pickup From:</small>
@@ -119,7 +119,7 @@ function RouteComponent() {
           </p>
         </div>
         <span className="divider divider-horizontal" />
-        <div className="space-y-2 w-full">
+        <div className="space-y-2 w-full min-w-[300px]">
           <div className="flex items-center space-x-2 text-dark-green-clr">
             <SewingPinFilledIcon />
             <small className="text-xs font-light">Deliver To:</small>
@@ -129,7 +129,7 @@ function RouteComponent() {
           </p>
         </div>
         <span className="divider divider-horizontal" />
-        <div className="flex items-center space-x-6 w-full">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 lg:gap-6 w-full min-w-[200px]">
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-info">
               <AvatarIcon />
@@ -326,15 +326,30 @@ const PickupDateSetModal = ({
     }>
   >;
 }) => {
+  const [showToast, setShowToast] = useState(false);
   const handleSetPickupDate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const date = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+    if (!date.date) {
+      setShowToast(true);
+      return;
+    }
     setDate((prev) => ({
       ...prev,
       pickup: date.date as string,
     }));
     onClose();
   };
+
+  useEffect(() => {
+    const toast = setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(toast);
+    };
+  }, [showToast]);
   return (
     <dialog id="pickupDateModal" className="modal">
       <div className="modal-box">
@@ -363,6 +378,14 @@ const PickupDateSetModal = ({
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
       </form>
+      {showToast && (
+        <div className="toast toast-top">
+          <div className="alert alert-error text-white">
+            <InfoCircledIcon />
+            <p className="text-sm">Please select a valid date</p>
+          </div>
+        </div>
+      )}
     </dialog>
   );
 };
@@ -379,15 +402,30 @@ const DeliveryDateSetModal = ({
     }>
   >;
 }) => {
+  const [showToast, setShowToast] = useState(false);
   const handleSetDeliveryDate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const date = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+    if (!date.date) {
+      setShowToast(true);
+      return;
+    }
     setDate((prev) => ({
       ...prev,
       delivery: date.date as string,
     }));
     onClose();
   };
+
+  useEffect(() => {
+    const toast = setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(toast);
+    };
+  }, [showToast]);
   return (
     <dialog id="deliveryDateModal" className="modal">
       <div className="modal-box">
@@ -416,6 +454,14 @@ const DeliveryDateSetModal = ({
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
       </form>
+      {showToast && (
+        <div className="toast toast-top">
+          <div className="alert alert-error text-white">
+            <InfoCircledIcon />
+            <p className="text-sm">Please select a valid date</p>
+          </div>
+        </div>
+      )}
     </dialog>
   );
 };

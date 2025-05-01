@@ -12,11 +12,14 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as authRegisterIndexImport } from './routes/(auth)/register/index'
+import { Route as authLoginIndexImport } from './routes/(auth)/login/index'
 import { Route as appRegionsIndexImport } from './routes/(app)/regions/index'
 import { Route as appProfileIndexImport } from './routes/(app)/profile/index'
 import { Route as appOrdersIndexImport } from './routes/(app)/orders/index'
 import { Route as appNotificationsIndexImport } from './routes/(app)/notifications/index'
 import { Route as appFinanceIndexImport } from './routes/(app)/finance/index'
+import { Route as appDeliverablesIndexImport } from './routes/(app)/deliverables/index'
 import { Route as appOrdersOrderIdImport } from './routes/(app)/orders/$orderId'
 
 // Create/Update Routes
@@ -24,6 +27,18 @@ import { Route as appOrdersOrderIdImport } from './routes/(app)/orders/$orderId'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authRegisterIndexRoute = authRegisterIndexImport.update({
+  id: '/(auth)/register/',
+  path: '/register/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLoginIndexRoute = authLoginIndexImport.update({
+  id: '/(auth)/login/',
+  path: '/login/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -57,6 +72,12 @@ const appFinanceIndexRoute = appFinanceIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const appDeliverablesIndexRoute = appDeliverablesIndexImport.update({
+  id: '/(app)/deliverables/',
+  path: '/deliverables/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const appOrdersOrderIdRoute = appOrdersOrderIdImport.update({
   id: '/(app)/orders/$orderId',
   path: '/orders/$orderId',
@@ -79,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/orders/$orderId'
       fullPath: '/orders/$orderId'
       preLoaderRoute: typeof appOrdersOrderIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/(app)/deliverables/': {
+      id: '/(app)/deliverables/'
+      path: '/deliverables'
+      fullPath: '/deliverables'
+      preLoaderRoute: typeof appDeliverablesIndexImport
       parentRoute: typeof rootRoute
     }
     '/(app)/finance/': {
@@ -116,6 +144,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRegionsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/(auth)/login/': {
+      id: '/(auth)/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/register/': {
+      id: '/(auth)/register/'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -124,32 +166,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/deliverables': typeof appDeliverablesIndexRoute
   '/finance': typeof appFinanceIndexRoute
   '/notifications': typeof appNotificationsIndexRoute
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
+  '/login': typeof authLoginIndexRoute
+  '/register': typeof authRegisterIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/deliverables': typeof appDeliverablesIndexRoute
   '/finance': typeof appFinanceIndexRoute
   '/notifications': typeof appNotificationsIndexRoute
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
+  '/login': typeof authLoginIndexRoute
+  '/register': typeof authRegisterIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/(app)/orders/$orderId': typeof appOrdersOrderIdRoute
+  '/(app)/deliverables/': typeof appDeliverablesIndexRoute
   '/(app)/finance/': typeof appFinanceIndexRoute
   '/(app)/notifications/': typeof appNotificationsIndexRoute
   '/(app)/orders/': typeof appOrdersIndexRoute
   '/(app)/profile/': typeof appProfileIndexRoute
   '/(app)/regions/': typeof appRegionsIndexRoute
+  '/(auth)/login/': typeof authLoginIndexRoute
+  '/(auth)/register/': typeof authRegisterIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -157,50 +208,65 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/orders/$orderId'
+    | '/deliverables'
     | '/finance'
     | '/notifications'
     | '/orders'
     | '/profile'
     | '/regions'
+    | '/login'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/orders/$orderId'
+    | '/deliverables'
     | '/finance'
     | '/notifications'
     | '/orders'
     | '/profile'
     | '/regions'
+    | '/login'
+    | '/register'
   id:
     | '__root__'
     | '/'
     | '/(app)/orders/$orderId'
+    | '/(app)/deliverables/'
     | '/(app)/finance/'
     | '/(app)/notifications/'
     | '/(app)/orders/'
     | '/(app)/profile/'
     | '/(app)/regions/'
+    | '/(auth)/login/'
+    | '/(auth)/register/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appOrdersOrderIdRoute: typeof appOrdersOrderIdRoute
+  appDeliverablesIndexRoute: typeof appDeliverablesIndexRoute
   appFinanceIndexRoute: typeof appFinanceIndexRoute
   appNotificationsIndexRoute: typeof appNotificationsIndexRoute
   appOrdersIndexRoute: typeof appOrdersIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
   appRegionsIndexRoute: typeof appRegionsIndexRoute
+  authLoginIndexRoute: typeof authLoginIndexRoute
+  authRegisterIndexRoute: typeof authRegisterIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appOrdersOrderIdRoute: appOrdersOrderIdRoute,
+  appDeliverablesIndexRoute: appDeliverablesIndexRoute,
   appFinanceIndexRoute: appFinanceIndexRoute,
   appNotificationsIndexRoute: appNotificationsIndexRoute,
   appOrdersIndexRoute: appOrdersIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
   appRegionsIndexRoute: appRegionsIndexRoute,
+  authLoginIndexRoute: authLoginIndexRoute,
+  authRegisterIndexRoute: authRegisterIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -215,11 +281,14 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/(app)/orders/$orderId",
+        "/(app)/deliverables/",
         "/(app)/finance/",
         "/(app)/notifications/",
         "/(app)/orders/",
         "/(app)/profile/",
-        "/(app)/regions/"
+        "/(app)/regions/",
+        "/(auth)/login/",
+        "/(auth)/register/"
       ]
     },
     "/": {
@@ -227,6 +296,9 @@ export const routeTree = rootRoute
     },
     "/(app)/orders/$orderId": {
       "filePath": "(app)/orders/$orderId.tsx"
+    },
+    "/(app)/deliverables/": {
+      "filePath": "(app)/deliverables/index.tsx"
     },
     "/(app)/finance/": {
       "filePath": "(app)/finance/index.tsx"
@@ -242,6 +314,12 @@ export const routeTree = rootRoute
     },
     "/(app)/regions/": {
       "filePath": "(app)/regions/index.tsx"
+    },
+    "/(auth)/login/": {
+      "filePath": "(auth)/login/index.tsx"
+    },
+    "/(auth)/register/": {
+      "filePath": "(auth)/register/index.tsx"
     }
   }
 }

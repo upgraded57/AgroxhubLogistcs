@@ -11,7 +11,7 @@ function RouteComponent() {
       title="Profile"
       subtitle="Manage and update your profile information"
     >
-      <div className="rounded-lg shadow p-4 bg-white">
+      <div className="rounded-lg shadow p-4 mb-6 bg-white">
         <div className="flex items-center space-x-6">
           <div className="avatar">
             <div className="w-16 rounded-full">
@@ -32,7 +32,7 @@ function RouteComponent() {
 
         <form className="p-2 space-y-8">
           {/* Name and Email */}
-          <div className="flex space-x-6">
+          <div className="lg:flex space-x-6 space-y-6">
             <label htmlFor="name" className="block w-full">
               <p className="text-sm">Display Name</p>
               <p className="text-sm font-light text-grey-clr">
@@ -70,7 +70,7 @@ function RouteComponent() {
               nearest orders
             </p>
 
-            <div className="flex space-x-6 mt-3">
+            <div className="lg:flex space-y-6 space-x-6 mt-3">
               <select
                 defaultValue="Select Company State"
                 className="select w-full"
@@ -121,7 +121,7 @@ function RouteComponent() {
           </label>
 
           {/* Phone Number and Submit Button */}
-          <div className="flex space-x-6 items-end">
+          <div className="lg:flex space-x-6 space-y-6 items-end">
             <label htmlFor="phone" className="block w-full">
               <p className="text-sm">Phone Number(s)</p>
               <p className="text-sm font-light text-grey-clr">
@@ -164,7 +164,7 @@ function RouteComponent() {
             type="checkbox"
             defaultChecked
             id="visibility"
-            className="toggle toggle-success mt-3"
+            className="toggle checked:bg-dark-green-clr checked:text-white mt-3"
           />
         </label>
       </div>
