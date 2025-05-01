@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
   component: App,
 });
 
-function App() {
+export function App() {
   return (
     <AppLayout title="Overview" subtitle="Your account at a glance">
       <Summary />

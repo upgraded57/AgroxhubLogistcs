@@ -1,4 +1,5 @@
 import AppLayout from "@/components/layouts/AppLayout";
+
 import { AllCategories } from "@/lib/categories";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";

@@ -1,4 +1,5 @@
 import AppLayout from "@/components/layouts/AppLayout";
+import Pending from "@/components/pending";
 import OrdersTable from "@/components/tables/OrdersTable";
 import {
   AvatarIcon,
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/(app)/orders/$orderId")({
   component: RouteComponent,
+  pendingComponent: Pending,
 });
 
 function RouteComponent() {
@@ -191,7 +193,7 @@ function RouteComponent() {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg shadow p-4 bg-white">
+      <div className="rounded-lg shadow p-4 bg-white mb-6">
         <OrdersTable orders={5} />
       </div>
 
