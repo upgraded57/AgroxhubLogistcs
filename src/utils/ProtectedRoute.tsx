@@ -11,9 +11,10 @@ export default function ProtectedRoute({
   const user = useContext(AdminContext).user;
   useEffect(() => {
     if (!user) {
-      navigate({ to: "/" });
+      navigate({ to: "/auth" });
       return;
     }
   }, []);
+
   return children;
 }

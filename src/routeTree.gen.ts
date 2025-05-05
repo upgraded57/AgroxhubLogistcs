@@ -12,8 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as authRegisterIndexImport } from './routes/(auth)/register/index'
-import { Route as authLoginIndexImport } from './routes/(auth)/login/index'
+import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as AuthVerifyEmailIndexImport } from './routes/auth/verify-email/index'
+import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
+import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
+import { Route as AuthCheckEmailIndexImport } from './routes/auth/check-email/index'
 import { Route as appRegionsIndexImport } from './routes/(app)/regions/index'
 import { Route as appProfileIndexImport } from './routes/(app)/profile/index'
 import { Route as appOrdersIndexImport } from './routes/(app)/orders/index'
@@ -30,15 +33,33 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const authRegisterIndexRoute = authRegisterIndexImport.update({
-  id: '/(auth)/register/',
-  path: '/register/',
+const AuthIndexRoute = AuthIndexImport.update({
+  id: '/auth/',
+  path: '/auth/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const authLoginIndexRoute = authLoginIndexImport.update({
-  id: '/(auth)/login/',
-  path: '/login/',
+const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexImport.update({
+  id: '/auth/verify-email/',
+  path: '/auth/verify-email/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRegisterIndexRoute = AuthRegisterIndexImport.update({
+  id: '/auth/register/',
+  path: '/auth/register/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthLoginIndexRoute = AuthLoginIndexImport.update({
+  id: '/auth/login/',
+  path: '/auth/login/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthCheckEmailIndexRoute = AuthCheckEmailIndexImport.update({
+  id: '/auth/check-email/',
+  path: '/auth/check-email/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -95,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/(app)/orders/$orderId': {
       id: '/(app)/orders/$orderId'
       path: '/orders/$orderId'
@@ -144,18 +172,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRegionsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/login/': {
-      id: '/(auth)/login/'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginIndexImport
+    '/auth/check-email/': {
+      id: '/auth/check-email/'
+      path: '/auth/check-email'
+      fullPath: '/auth/check-email'
+      preLoaderRoute: typeof AuthCheckEmailIndexImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/register/': {
-      id: '/(auth)/register/'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof authRegisterIndexImport
+    '/auth/login/': {
+      id: '/auth/login/'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/register/': {
+      id: '/auth/register/'
+      path: '/auth/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/verify-email/': {
+      id: '/auth/verify-email/'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -165,6 +207,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthIndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
   '/deliverables': typeof appDeliverablesIndexRoute
   '/finance': typeof appFinanceIndexRoute
@@ -172,12 +215,15 @@ export interface FileRoutesByFullPath {
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
-  '/login': typeof authLoginIndexRoute
-  '/register': typeof authRegisterIndexRoute
+  '/auth/check-email': typeof AuthCheckEmailIndexRoute
+  '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/register': typeof AuthRegisterIndexRoute
+  '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthIndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
   '/deliverables': typeof appDeliverablesIndexRoute
   '/finance': typeof appFinanceIndexRoute
@@ -185,13 +231,16 @@ export interface FileRoutesByTo {
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
-  '/login': typeof authLoginIndexRoute
-  '/register': typeof authRegisterIndexRoute
+  '/auth/check-email': typeof AuthCheckEmailIndexRoute
+  '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/register': typeof AuthRegisterIndexRoute
+  '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/(app)/orders/$orderId': typeof appOrdersOrderIdRoute
   '/(app)/deliverables/': typeof appDeliverablesIndexRoute
   '/(app)/finance/': typeof appFinanceIndexRoute
@@ -199,14 +248,17 @@ export interface FileRoutesById {
   '/(app)/orders/': typeof appOrdersIndexRoute
   '/(app)/profile/': typeof appProfileIndexRoute
   '/(app)/regions/': typeof appRegionsIndexRoute
-  '/(auth)/login/': typeof authLoginIndexRoute
-  '/(auth)/register/': typeof authRegisterIndexRoute
+  '/auth/check-email/': typeof AuthCheckEmailIndexRoute
+  '/auth/login/': typeof AuthLoginIndexRoute
+  '/auth/register/': typeof AuthRegisterIndexRoute
+  '/auth/verify-email/': typeof AuthVerifyEmailIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/orders/$orderId'
     | '/deliverables'
     | '/finance'
@@ -214,11 +266,14 @@ export interface FileRouteTypes {
     | '/orders'
     | '/profile'
     | '/regions'
-    | '/login'
-    | '/register'
+    | '/auth/check-email'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/verify-email'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/orders/$orderId'
     | '/deliverables'
     | '/finance'
@@ -226,11 +281,14 @@ export interface FileRouteTypes {
     | '/orders'
     | '/profile'
     | '/regions'
-    | '/login'
-    | '/register'
+    | '/auth/check-email'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/verify-email'
   id:
     | '__root__'
     | '/'
+    | '/auth/'
     | '/(app)/orders/$orderId'
     | '/(app)/deliverables/'
     | '/(app)/finance/'
@@ -238,13 +296,16 @@ export interface FileRouteTypes {
     | '/(app)/orders/'
     | '/(app)/profile/'
     | '/(app)/regions/'
-    | '/(auth)/login/'
-    | '/(auth)/register/'
+    | '/auth/check-email/'
+    | '/auth/login/'
+    | '/auth/register/'
+    | '/auth/verify-email/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   appOrdersOrderIdRoute: typeof appOrdersOrderIdRoute
   appDeliverablesIndexRoute: typeof appDeliverablesIndexRoute
   appFinanceIndexRoute: typeof appFinanceIndexRoute
@@ -252,12 +313,15 @@ export interface RootRouteChildren {
   appOrdersIndexRoute: typeof appOrdersIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
   appRegionsIndexRoute: typeof appRegionsIndexRoute
-  authLoginIndexRoute: typeof authLoginIndexRoute
-  authRegisterIndexRoute: typeof authRegisterIndexRoute
+  AuthCheckEmailIndexRoute: typeof AuthCheckEmailIndexRoute
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthIndexRoute: AuthIndexRoute,
   appOrdersOrderIdRoute: appOrdersOrderIdRoute,
   appDeliverablesIndexRoute: appDeliverablesIndexRoute,
   appFinanceIndexRoute: appFinanceIndexRoute,
@@ -265,8 +329,10 @@ const rootRouteChildren: RootRouteChildren = {
   appOrdersIndexRoute: appOrdersIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
   appRegionsIndexRoute: appRegionsIndexRoute,
-  authLoginIndexRoute: authLoginIndexRoute,
-  authRegisterIndexRoute: authRegisterIndexRoute,
+  AuthCheckEmailIndexRoute: AuthCheckEmailIndexRoute,
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+  AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -280,6 +346,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/auth/",
         "/(app)/orders/$orderId",
         "/(app)/deliverables/",
         "/(app)/finance/",
@@ -287,12 +354,17 @@ export const routeTree = rootRoute
         "/(app)/orders/",
         "/(app)/profile/",
         "/(app)/regions/",
-        "/(auth)/login/",
-        "/(auth)/register/"
+        "/auth/check-email/",
+        "/auth/login/",
+        "/auth/register/",
+        "/auth/verify-email/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/auth/": {
+      "filePath": "auth/index.tsx"
     },
     "/(app)/orders/$orderId": {
       "filePath": "(app)/orders/$orderId.tsx"
@@ -315,11 +387,17 @@ export const routeTree = rootRoute
     "/(app)/regions/": {
       "filePath": "(app)/regions/index.tsx"
     },
-    "/(auth)/login/": {
-      "filePath": "(auth)/login/index.tsx"
+    "/auth/check-email/": {
+      "filePath": "auth/check-email/index.tsx"
     },
-    "/(auth)/register/": {
-      "filePath": "(auth)/register/index.tsx"
+    "/auth/login/": {
+      "filePath": "auth/login/index.tsx"
+    },
+    "/auth/register/": {
+      "filePath": "auth/register/index.tsx"
+    },
+    "/auth/verify-email/": {
+      "filePath": "auth/verify-email/index.tsx"
     }
   }
 }

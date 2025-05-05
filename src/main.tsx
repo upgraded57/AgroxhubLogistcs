@@ -9,6 +9,7 @@ const queryClient = new QueryClient();
 import { routeTree } from "./routeTree.gen";
 
 import reportWebVitals from "./reportWebVitals.ts";
+import { Toaster } from "sonner";
 
 // Create a new router instance
 const router = createRouter({
@@ -34,6 +35,13 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
+        <Toaster
+          richColors
+          position="top-right"
+          toastOptions={{
+            closeButton: true,
+          }}
+        />
         <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>

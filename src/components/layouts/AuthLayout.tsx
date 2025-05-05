@@ -30,7 +30,11 @@ export default function AuthLayout({
                 : "Already have an account?"}
             </p>
             <Link
-              to={title.toLowerCase() === "login" ? "/register" : "/login"}
+              to={
+                title.toLowerCase() === "login"
+                  ? "/auth/register"
+                  : "/auth/login"
+              }
               className="text-sm text-dark-green-clr hover:underline"
             >
               {title.toLowerCase() === "login"
