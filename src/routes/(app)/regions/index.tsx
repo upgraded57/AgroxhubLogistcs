@@ -2,7 +2,7 @@ import AppLayout from "@/components/layouts/AppLayout";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { useGetAllRegions, useGetServiceRegions } from "@/api/region";
+import { useGetAllRegions } from "@/api/region";
 
 export const Route = createFileRoute("/(app)/regions/")({
   component: RouteComponent,
@@ -28,7 +28,6 @@ function groupByLCDA(data: Region[]) {
 
 function RouteComponent() {
   const { data: allRegions } = useGetAllRegions();
-  const { data: serviceRegions } = useGetServiceRegions();
 
   const groupedItems = groupByLCDA(allRegions);
   const [activeLcda, setActiveLcda] = useState("");

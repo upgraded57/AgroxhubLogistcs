@@ -1,7 +1,7 @@
 import AppLayout from "@/components/layouts/AppLayout";
 import { AdminContext } from "@/context/AdminProvider";
 import { createFileRoute } from "@tanstack/react-router";
-import { use, useContext } from "react";
+import { useContext } from "react";
 
 export const Route = createFileRoute("/(app)/profile/")({
   component: RouteComponent,

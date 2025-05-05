@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import AuthLayout from "@/components/layouts/AuthLayout";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useRegister } from "@/api/auth";
 
