@@ -54,6 +54,7 @@ function RouteComponent() {
             />
             <button
               className="join-item btn btn-square shadow-none"
+              type="button"
               onClick={() => setShowPass((prev) => !prev)}
             >
               {showPass ? <EyeNoneIcon /> : <EyeOpenIcon />}
