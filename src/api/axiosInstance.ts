@@ -2,8 +2,7 @@ import type { ApiErrorResponse } from "@/types/axios";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 import { toast } from "sonner";
 
-const baseURL =
-  import.meta.env.VITE_BASE_URL || "http://localhost:8800/api/logistics/v1";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 type ApiError = AxiosError<ApiErrorResponse>;
 
