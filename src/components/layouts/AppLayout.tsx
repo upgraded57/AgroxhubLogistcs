@@ -100,9 +100,9 @@ export default function AppLayout({
           <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
             <div className="flex items-center space-x-3">
               <AvatarComp />
-              <span className="space-y-0">
+              <span className="space-y-0 overflow-x-hidden">
                 <p className="font-medium text-sm">{user?.name}</p>
-                <small className="truncate">{user?.email}</small>
+                <small className="truncate text-ellipsis">{user?.email}</small>
               </span>
             </div>
           </div>

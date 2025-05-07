@@ -283,12 +283,17 @@ function RouteComponent() {
                   --Select State --
                 </option>
                 <option value="Lagos">Lagos</option>
+                <option value="Ogun">Ogun</option>
               </select>
               <select
                 className="select select-bordered w-full"
                 defaultValue=""
                 name="lcda"
-                disabled={isLoadingRegions || !selectedRegion.state}
+                disabled={
+                  isLoadingRegions ||
+                  !selectedRegion.state ||
+                  selectedRegion.state.toLowerCase() !== "lagos"
+                }
                 onChange={(e) =>
                   setSelectedRegion((prev) => ({
                     ...prev,
