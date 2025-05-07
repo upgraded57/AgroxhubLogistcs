@@ -8,6 +8,7 @@ interface User {
   isVisible: boolean;
   name: string;
   regionId: string | null;
+  region?: Region;
 }
 
 interface Product {
@@ -91,6 +92,12 @@ interface Category {
   id: string;
   name: string;
   slug: string;
+}
+
+interface Deliverable {
+  categoryName: string;
+  unitCost: string;
+  categoryId: string;
 }
 
 interface Cart {

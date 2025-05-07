@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "./axiosInstance";
 
 export const useGetAllRegions = () => {
   const getAllRegions = async () => {
     const res = await axiosInstance.get("/regions/all", { showToast: false });
-    return res.data.regions;
+    return res.data.regions as Region[];
   };
 
   return useQuery({
@@ -24,5 +24,12 @@ export const useGetServiceRegions = () => {
   return useQuery({
     queryKey: ["ServiceRegions"],
     queryFn: geServiceRegions,
+  });
+};
+
+export const useUpdateServiceRegions = () => {
+  return useMutation({
+    mutationFn: (data: string[]) =>
+      axiosInstance.patch("/regions/service", { regionIds: data }),
   });
 };

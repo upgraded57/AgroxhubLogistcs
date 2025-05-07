@@ -114,7 +114,7 @@ function RouteComponent() {
         <div className="space-y-2 w-full min-w-[300px]">
           <div className="flex items-center space-x-2 text-yellow-clr">
             <RadiobuttonIcon />
-            <small className="text-xs font-light">Pickup From:</small>
+            <small>Pickup From:</small>
           </div>
           <p className="text-sm">
             Somewhere Street, some location, Somewhere in Lagos
@@ -124,7 +124,7 @@ function RouteComponent() {
         <div className="space-y-2 w-full min-w-[300px]">
           <div className="flex items-center space-x-2 text-dark-green-clr">
             <SewingPinFilledIcon />
-            <small className="text-xs font-light">Deliver To:</small>
+            <small>Deliver To:</small>
           </div>
           <p className="text-sm">
             Somewhere Street, some location, Somewhere in Lagos
@@ -135,7 +135,7 @@ function RouteComponent() {
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-info">
               <AvatarIcon />
-              <small className="text-xs font-light">Buyer:</small>
+              <small>Buyer:</small>
             </div>
             <p className="text-sm">John Doe</p>
           </div>

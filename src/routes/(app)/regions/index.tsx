@@ -1,8 +1,14 @@
 import AppLayout from "@/components/layouts/AppLayout";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { useGetAllRegions } from "@/api/region";
+import { useEffect, useState } from "react";
+import {
+  useGetAllRegions,
+  useGetServiceRegions,
+  useUpdateServiceRegions,
+} from "@/api/region";
+import Pending from "@/components/pending";
+import ButtonPending from "@/components/buttonPending";
 
 export const Route = createFileRoute("/(app)/regions/")({
   component: RouteComponent,
@@ -27,9 +33,12 @@ function groupByLCDA(data: Region[]) {
 }
 
 function RouteComponent() {
-  const { data: allRegions } = useGetAllRegions();
+  const { data: allRegions, isLoading: isLoadingAllRegions } =
+    useGetAllRegions();
+  const { data: serviceRegions, isLoading: isLoadingServiceRegions } =
+    useGetServiceRegions();
 
-  const groupedItems = groupByLCDA(allRegions);
+  const groupedItems = groupByLCDA(allRegions ?? []);
   const [activeLcda, setActiveLcda] = useState("");
   const [selectedRegions, setSelectedRegions] = useState<
     {
@@ -37,6 +46,34 @@ function RouteComponent() {
       regionId: string;
     }[]
   >([]);
+
+  // Show an active lcda box and Populate initial selected region from API
+  useEffect(() => {
+    if (serviceRegions && allRegions) {
+      // show active region box
+      setActiveLcda(
+        () =>
+          allRegions.find((item) => serviceRegions[0].regionId === item.id)
+            ?.lcda || ""
+      );
+      const updated = serviceRegions
+        .map((region) => {
+          const foundRegion = allRegions.find(
+            (item) => item.id === region.regionId
+          );
+          if (foundRegion) {
+            return {
+              lcda: foundRegion.lcda,
+              regionId: foundRegion.id,
+            };
+          }
+          return null;
+        })
+        .filter(Boolean) as { lcda: string; regionId: string }[];
+
+      setSelectedRegions(updated);
+    }
+  }, [serviceRegions, allRegions]);
 
   const handleSelectRegion = (lcda: string, regionId: string) => {
     // Check if entry is in array
@@ -82,9 +119,11 @@ function RouteComponent() {
     setSelectedRegions(newArray);
   };
 
+  const { mutate: updateServiceRegions, isPending: isUpdating } =
+    useUpdateServiceRegions();
   const handleUpdateServiceRegions = () => {
     const selectedRegionsIds = selectedRegions.map((item) => item.regionId);
-    console.log(selectedRegionsIds);
+    updateServiceRegions(selectedRegionsIds);
   };
 
   return (
@@ -95,91 +134,97 @@ function RouteComponent() {
         <button
           className="btn bg-dark-green-clr text-white font-normal border-0"
           onClick={handleUpdateServiceRegions}
+          disabled={
+            isUpdating || selectedRegions.length === serviceRegions?.length
+          }
         >
+          {isUpdating && <ButtonPending />}
           Save Changes
         </button>
       }
     >
-      <>
-        {groupedItems?.map((item, idx) => {
-          const selectedCount = selectedRegions.filter(
-            (region) => region.lcda === item.lcda
-          ).length;
+      {isLoadingAllRegions || isLoadingServiceRegions ? (
+        <Pending />
+      ) : (
+        <>
+          {groupedItems?.map((item, idx) => {
+            const selectedCount = selectedRegions.filter(
+              (region) => region.lcda === item.lcda
+            ).length;
 
-          const totalCount = groupedItems?.filter(
-            (region) => region.lcda === item.lcda
-          )[0].locations.length;
+            const totalCount = groupedItems?.filter(
+              (region) => region.lcda === item.lcda
+            )[0].locations.length;
 
-          const allSelected =
-            groupedItems?.filter((region) => region.lcda === item.lcda)[0]
-              .locations.length === selectedCount;
-          return (
-            <div className="border-b-[1px] border-b-base-300" key={idx}>
-              <div className="py-4 flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <span
-                    className="btn btn-square btn-sm"
-                    onClick={() => {
-                      activeLcda === item.lcda
-                        ? setActiveLcda("")
-                        : setActiveLcda(item.lcda);
-                    }}
-                  >
-                    {activeLcda === item.lcda ? (
-                      <ChevronUpIcon />
-                    ) : (
-                      <ChevronDownIcon />
-                    )}
-                  </span>
-                  <span className="space-x-4 flex flex-col lg:flex-row lg:items-center">
-                    <p className="text-sm">{item.lcda}</p>
-                    <p className="text-sm text-grey-clr font-light">
-                      ({selectedCount} of {totalCount} regions Selected)
-                    </p>
-                  </span>
+            const allSelected =
+              groupedItems?.filter((region) => region.lcda === item.lcda)[0]
+                .locations.length === selectedCount;
+            return (
+              <div className="border-b-[1px] border-b-base-300" key={idx}>
+                <div className="py-4 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <span
+                      className="btn btn-square btn-sm"
+                      onClick={() => {
+                        activeLcda === item.lcda
+                          ? setActiveLcda("")
+                          : setActiveLcda(item.lcda);
+                      }}
+                    >
+                      {activeLcda === item.lcda ? (
+                        <ChevronUpIcon />
+                      ) : (
+                        <ChevronDownIcon />
+                      )}
+                    </span>
+                    <span className="space-x-4 flex flex-col lg:flex-row lg:items-center">
+                      <p className="text-sm">{item.lcda}</p>
+                      <p className="text-sm text-grey-clr font-light">
+                        ({selectedCount} of {totalCount} regions Selected)
+                      </p>
+                    </span>
+                  </div>
+
+                  <label className="flex items-center space-x-4 cursor-pointer">
+                    <small>{allSelected ? "Deselect All" : "Select All"}</small>
+
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      className="toggle toggle-xs checked:text-white checked:bg-dark-green-clr"
+                      onChange={() =>
+                        allSelected
+                          ? handleDeselectAll(item.lcda)
+                          : handleSelectAll(item.lcda)
+                      }
+                    />
+                  </label>
                 </div>
 
-                <label className="flex items-center space-x-4 cursor-pointer">
-                  <p className="text-xs">
-                    {allSelected ? "Deselect All" : "Select All"}
-                  </p>
+                {activeLcda === item.lcda && (
+                  <div className="bg-white p-4 pb-0 shadow rounded-lg mb-4 mt-2 flex flex-wrap space-x-4 space-y-4">
+                    {item.locations.map((item, idx) => {
+                      const isSelected = selectedRegions.some(
+                        (region) => region.regionId === item.id
+                      );
 
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    className="toggle toggle-xs checked:text-white checked:bg-dark-green-clr"
-                    onChange={() =>
-                      allSelected
-                        ? handleDeselectAll(item.lcda)
-                        : handleSelectAll(item.lcda)
-                    }
-                  />
-                </label>
+                      return (
+                        <div
+                          className={`badge rounded-full text-xs font-light cursor-pointer ${isSelected ? "bg-dark-green-clr text-white border-dark-green-clr border-dark-green-clr" : "hover:bg-base-300 border-base-300 "}`}
+                          key={idx}
+                          onClick={() => handleSelectRegion(item.lcda, item.id)}
+                        >
+                          {item.name}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-
-              {activeLcda === item.lcda && (
-                <div className="bg-white p-4 pb-0 shadow rounded-lg mb-4 mt-2 flex flex-wrap space-x-4 space-y-4">
-                  {item.locations.map((item, idx) => {
-                    const isSelected = selectedRegions.some(
-                      (region) => region.regionId === item.id
-                    );
-
-                    return (
-                      <div
-                        className={`badge rounded-full text-xs font-light cursor-pointer ${isSelected ? "bg-dark-green-clr text-white border-dark-green-clr" : "hover:bg-base-300 border-base-300 "}`}
-                        key={idx}
-                        onClick={() => handleSelectRegion(item.lcda, item.id)}
-                      >
-                        {item.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </>
+            );
+          })}
+        </>
+      )}
     </AppLayout>
   );
 }

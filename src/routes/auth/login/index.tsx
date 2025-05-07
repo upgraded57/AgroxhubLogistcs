@@ -3,6 +3,7 @@ import AuthLayout from "@/components/layouts/AuthLayout";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useLogin } from "@/api/auth";
+import ButtonPending from "@/components/buttonPending";
 
 export const Route = createFileRoute("/auth/login/")({
   component: RouteComponent,
@@ -66,7 +67,7 @@ function RouteComponent() {
           className="btn text-sm font-normal bg-dark-green-clr text-white border-none"
           disabled={isPending}
         >
-          {isPending && <span className="loading loading-spinner" />}
+          {isPending && <ButtonPending />}
           Login
         </button>
       </form>

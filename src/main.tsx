@@ -41,6 +41,9 @@ if (rootElement && !rootElement.innerHTML) {
           toastOptions={{
             closeButton: true,
           }}
+          icons={{
+            loading: <span className="loading loading-spinner loading-sm" />,
+          }}
         />
         <RouterProvider router={router} />
       </QueryClientProvider>

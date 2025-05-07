@@ -16,7 +16,7 @@ let toastId: string | undefined;
 axiosInstance.interceptors.request.use(
   (config) => {
     if (config.showToast !== false) {
-      toastId = toast.loading("Loading", {
+      toastId = toast.loading("Please wait", {
         description: "Your request is being processed",
         id: "toast",
       }) as string;
@@ -34,7 +34,7 @@ axiosInstance.interceptors.request.use(
 
     if (config?.showToast !== false) {
       toast.error("Request error", {
-        description: error?.response?.data?.message,
+        description: error?.message,
         id: toastId,
       });
     }
@@ -63,7 +63,7 @@ axiosInstance.interceptors.response.use(
     if (config?.showToast !== false) {
       toast.error("Request Error", {
         id: toastId,
-        description: error?.response?.data?.message,
+        description: error?.response?.data?.message || error?.message,
       });
     }
 

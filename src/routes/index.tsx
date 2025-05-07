@@ -120,7 +120,7 @@ const Summary = () => {
               to="."
               className="flex items-center space-x-1 border-b-[1px] w-max"
             >
-              <small className="text-xs font-light">View All</small>
+              <small>View All</small>
               <ArrowRightIcon />
             </Link>
           </div>
@@ -144,9 +144,7 @@ const RatingComp = () => {
         </div>
         <div className="flex flex-col min-w-max">
           <p className="text-sm">John Doe</p>
-          <small className="text-xs font-light text-grey-clr ">
-            8 Days Ago
-          </small>
+          <small>8 Days Ago</small>
         </div>
       </div>
 

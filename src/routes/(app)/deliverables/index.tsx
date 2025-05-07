@@ -1,7 +1,14 @@
+import {
+  useGetAllCategories,
+  useGetDeliverables,
+  useUpdateDeliverables,
+} from "@/api/deliverable";
 import AppLayout from "@/components/layouts/AppLayout";
-import { AllCategories } from "@/lib/categories";
+import Pending from "@/components/pending";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/(app)/deliverables/")({
@@ -9,49 +16,79 @@ export const Route = createFileRoute("/(app)/deliverables/")({
 });
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+  const { data: deliverables, isLoading } = useGetDeliverables();
+  const { data: AllCategories, isLoading: isLoadingAllCategories } =
+    useGetAllCategories();
+
   const [selectedDeliverables, setSelectedDeliverables] = useState<
     {
+      id: string;
       name: string;
       unitCost: number;
     }[]
   >([]);
 
-  const handleSelectCategory = (name: string) => {
+  // Set initial deliverable
+  useEffect(() => {
+    if (AllCategories && deliverables) {
+      setSelectedDeliverables((prev) => {
+        const existingDeliverables = deliverables.map((item) => ({
+          id: item.categoryId,
+          name: item.categoryName,
+          unitCost: parseInt(item.unitCost),
+        }));
+
+        return [...prev, ...existingDeliverables];
+      });
+    }
+  }, [AllCategories, deliverables]);
+
+  const handleSelectCategory = (id: string) => {
     // Check if name exists in array
-    const alreadySelected = selectedDeliverables.some(
-      (item) => item.name === name
-    );
+    const alreadySelected = selectedDeliverables.some((item) => item.id === id);
     if (alreadySelected) {
-      const newArray = selectedDeliverables.filter(
-        (item) => item.name !== name
-      );
+      const newArray = selectedDeliverables.filter((item) => item.id !== id);
       setSelectedDeliverables(newArray);
     } else {
-      setSelectedDeliverables((prev) => [...prev, { name, unitCost: 0 }]);
+      const selected = AllCategories?.find((item) => item.id === id);
+      if (selected) {
+        setSelectedDeliverables((prev) => [
+          ...prev,
+          { id, name: selected.name, unitCost: 0 },
+        ]);
+      }
     }
   };
 
   const handleSelectAll = () => {
     // Check if all is selected
-    const allSelected = AllCategories.length === selectedDeliverables.length;
+    const allSelected = AllCategories?.length === selectedDeliverables.length;
     if (allSelected) {
       setSelectedDeliverables([]);
     } else {
-      setSelectedDeliverables(() =>
-        AllCategories.map((item) => ({ name: item.name, unitCost: 0 }))
-      );
+      setSelectedDeliverables((prev) => {
+        if (AllCategories) {
+          return AllCategories.map((item) => ({
+            name: item.name,
+            unitCost: 0,
+            id: item.id,
+          }));
+        } else return prev;
+      });
     }
   };
 
-  const handleSetUnitCost = (categoryName: string, cost: string) => {
+  const handleSetUnitCost = (id: string, cost: string) => {
     setSelectedDeliverables((prev) =>
       prev.map((item) =>
-        item.name === categoryName
-          ? { ...item, unitCost: parseInt(cost) || 0 }
-          : item
+        item.id === id ? { ...item, unitCost: parseInt(cost) || 0 } : item
       )
     );
   };
+
+  const { mutateAsync: updateDeliverables, isPending } =
+    useUpdateDeliverables();
 
   const handleSubmit = () => {
     // Check if all unit costs are properly set
@@ -71,8 +108,35 @@ function RouteComponent() {
       return;
     }
 
-    console.log(selectedDeliverables);
+    updateDeliverables(selectedDeliverables).then(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["Deliverables"],
+      });
+    });
   };
+
+  const areIdentical = () => {
+    if (deliverables?.length !== selectedDeliverables.length) return false;
+
+    const normalizedA = deliverables
+      .map((item) => ({
+        id: item.categoryId,
+        unitCost: parseInt(item.unitCost),
+      }))
+      .sort((a, b) => a.id.localeCompare(b.id));
+
+    const normalizedB = [...selectedDeliverables].sort((a, b) =>
+      a.id.localeCompare(b.id)
+    );
+
+    return normalizedA.every(
+      (a, index) =>
+        a.id === normalizedB[index].id &&
+        a.unitCost === normalizedB[index].unitCost
+    );
+  };
+
+  const isNotChanged = areIdentical();
 
   return (
     <AppLayout
@@ -87,12 +151,14 @@ function RouteComponent() {
             <span className="text-grey-clr`">
               ({selectedDeliverables.length}){" "}
             </span>
-            {AllCategories.length === selectedDeliverables.length
+            {AllCategories?.length === selectedDeliverables.length
               ? "Deselect All"
               : "Select All"}
           </button>
           <button
-            disabled={selectedDeliverables.length === 0}
+            disabled={
+              isPending || selectedDeliverables.length === 0 || isNotChanged
+            }
             className="btn bg-dark-green-clr text-white font-normal border-0"
             onClick={handleSubmit}
           >
@@ -101,48 +167,59 @@ function RouteComponent() {
         </div>
       }
     >
-      <div className="list">
-        {AllCategories.map((category, idx) => (
-          <div className="list-row hover:bg-base-300 flex flex-col lg:flex-row gap-0 lg:gap-4 items-start lg:items-center justify-start lg:justify-between h-auto">
-            <label
-              className="flex items-center space-x-4 rounded-none w-full cursor-pointer"
-              key={idx}
-              htmlFor={category.name}
-            >
-              <input
-                type="checkbox"
-                id={category.name}
-                value={category.name}
-                checked={selectedDeliverables.some(
-                  (item) => item.name === category.name
-                )}
-                onChange={() => handleSelectCategory(category.name)}
-                className="checkbox checkbox-lg checkbox-success text-white border-[1px] border-grey-clr checked:border-success"
-              />
-              <p>{category.name}</p>
-            </label>
-            {selectedDeliverables.some(
-              (item) => item.name === category.name
-            ) && (
-              <div className="w-full lg:w-max flex items-center justify-between lg:justify-start gap-4 mt-2 lg:mt-0 min-w-max">
-                <p className="text-xs font-light">
-                  Set your cost per KG <br /> in NGN Naira:
-                </p>
-                <label className="input max-w-[150px] input-sm">
-                  <span className="label">NGN</span>
+      {isLoadingAllCategories || isLoading ? (
+        <Pending />
+      ) : (
+        <div className="list">
+          {AllCategories?.map((category, idx) => {
+            return (
+              <div className="list-row hover:bg-base-300 flex flex-col lg:flex-row gap-0 lg:gap-4 items-start lg:items-center justify-start lg:justify-between h-auto">
+                <label
+                  className="flex items-center space-x-4 rounded-none w-full cursor-pointer"
+                  key={idx}
+                  htmlFor={category.id}
+                >
                   <input
-                    type="number"
-                    placeholder="200"
-                    onChange={(e) =>
-                      handleSetUnitCost(category.name, e.target.value)
-                    }
+                    type="checkbox"
+                    id={category.id}
+                    value={category.id}
+                    checked={selectedDeliverables.some(
+                      (item) => item.id === category.id
+                    )}
+                    onChange={() => handleSelectCategory(category.id)}
+                    className="checkbox checkbox-lg checkbox-success text-white border-[1px] border-grey-clr checked:border-success"
                   />
+                  <p>{category.name}</p>
                 </label>
+                {selectedDeliverables.some(
+                  (item) => item.id === category.id
+                ) && (
+                  <div className="w-full lg:w-max flex items-center justify-between lg:justify-start gap-4 mt-2 lg:mt-0 min-w-max">
+                    <small>
+                      Set your cost per KG <br /> in NGN Naira:
+                    </small>
+                    <label className="input max-w-[150px] input-sm">
+                      <span className="label">NGN</span>
+                      <input
+                        type="number"
+                        placeholder="200"
+                        defaultValue={
+                          selectedDeliverables.find(
+                            (item) => item.id === category.id
+                          )?.unitCost
+                        }
+                        onChange={(e) =>
+                          handleSetUnitCost(category.id, e.target.value)
+                        }
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </AppLayout>
   );
 }

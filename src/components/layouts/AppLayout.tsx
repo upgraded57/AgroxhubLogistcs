@@ -14,8 +14,8 @@ import {
   PieChartIcon,
   SpeakerModerateIcon,
 } from "@radix-ui/react-icons";
-import { Link } from "@tanstack/react-router";
-import { useContext, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { use, useState } from "react";
 
 export default function AppLayout({
   children,
@@ -29,11 +29,37 @@ export default function AppLayout({
   actions?: React.ReactNode;
 }) {
   const [navOpen, setNavOpen] = useState(false);
-  const user = useContext(AdminContext).user;
+  const user = use(AdminContext)?.user;
+  const isLoadingRoute = useRouterState({
+    select: (state) => state.status === "pending",
+  });
+
+  const pathName = useRouterState({
+    select: (state) => state.location.pathname,
+  });
 
   const [showNotice, setShowNotice] = useState(
     !!sessionStorage.getItem("closeNotice")
   );
+
+  const AvatarComp = () => {
+    const intitials = user?.name.split(" ");
+    const firstInitials = intitials?.[0][0] || "";
+    const secondInitials = intitials?.[1][0] || "";
+    return user?.avatar ? (
+      <div className="avatar">
+        <div className="w-10 rounded-full">
+          <img src={user?.avatar} />
+        </div>
+      </div>
+    ) : (
+      <div className="avatar avatar-placeholder">
+        <div className="bg-dark-green-clr text-white w-10 rounded-full">
+          <span className="text-lg">{firstInitials + secondInitials}</span>
+        </div>
+      </div>
+    );
+  };
   return (
     <AdminProvider>
       {!showNotice && (
@@ -69,21 +95,14 @@ export default function AppLayout({
             <div className="h-[70px] w-full flex items-center justify-center">
               <img src={IMAGES.logo} alt="Agroxhub" className="w-[148px]" />
             </div>
-            <NavLinks />
+            <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
           </div>
           <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
             <div className="flex items-center space-x-3">
-              <div className="avatar">
-                <div className="w-10 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                </div>
-              </div>
-
+              <AvatarComp />
               <span className="space-y-0">
                 <p className="font-medium text-sm">{user?.name}</p>
-                <small className="text-xs font-light truncate">
-                  {user?.email}
-                </small>
+                <small className="truncate">{user?.email}</small>
               </span>
             </div>
           </div>
@@ -106,11 +125,7 @@ export default function AppLayout({
                 className="w-[140px] h-auto"
               />
             </div>
-            <div className="avatar">
-              <div className="w-10 rounded-full">
-                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-              </div>
-            </div>
+            <AvatarComp />
           </div>
 
           {/* Sidebar small screen */}
@@ -120,14 +135,14 @@ export default function AppLayout({
             <div
               className={`w-[300px] border-t-[1px] border-t-light-grey-clr h-full bg-white shadow-lg`}
             >
-              <NavLinks />
+              <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
             </div>
           </div>
 
           {/* Content */}
           <main className="px-4 lg:p-6">
             <div className="flex flex-col lg:flex-row items-start space-y-4 lg:space-y-0 justify-start lg:items-center lg:justify-between mb-6">
-              <div className="space-y-1">
+              <div className="space-y-1 md:max-w-[400px] lg:max-w-max">
                 <h2 className="font-medium text-lg">{title}</h2>
                 <p className="text-sm font-light">{subtitle}</p>
               </div>
@@ -138,6 +153,7 @@ export default function AppLayout({
         </div>
       </div>
 
+      {/* Early access dialog */}
       <dialog id="earlyAccessModal" className="modal">
         <div className="modal-box">
           <h3 className="font-semibold text-lg">Early Access!</h3>
@@ -169,7 +185,13 @@ export default function AppLayout({
   );
 }
 
-const NavLinks = () => {
+const NavLinks = ({
+  isLoadingRoute,
+  pathName,
+}: {
+  isLoadingRoute: boolean;
+  pathName: string;
+}) => {
   const links = [
     {
       title: "Dashboard",
@@ -218,11 +240,13 @@ const NavLinks = () => {
       {({ isActive }) => (
         <div className="flex items-center space-x-4 py-4">
           {isActive && (
-            <span className="w-1 h-7 rounded bg-dark-green-clr m-0" />
+            <span
+              className={`w-1 h-7 rounded m-0 ${isLoadingRoute && pathName === item.href ? "bg-grey-clr" : "bg-dark-green-clr"}`}
+            />
           )}
           <div className="flex items-center space-x-4 pl-6">
             <span
-              className={`text scale-110 ${isActive ? "text-dark-green-clr" : "text-grey-clr"} ${item.title.toLowerCase() === "logout" && "text-red-clr"}`}
+              className={`text scale-110 ${isLoadingRoute && pathName === item.href ? "text-grey-clr" : isActive ? "text-dark-green-clr" : "text-grey-clr"} ${item.title.toLowerCase() === "logout" && "text-red-clr"}`}
             >
               {item.icon}
             </span>
@@ -231,6 +255,9 @@ const NavLinks = () => {
             >
               {item.title}
             </p>
+            {isLoadingRoute && pathName === item.href && (
+              <span className="loading loading-spinner loading-sm text-grey-clr" />
+            )}
           </div>
         </div>
       )}

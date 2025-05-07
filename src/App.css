@@ -36,3 +36,15 @@ body {
   font-style: normal;
   color: var(--black-clr);
 }
+
+.btn {
+  @apply font-normal;
+}
+
+p {
+  @apply text-sm;
+}
+
+small {
+  @apply text-xs font-light text-grey-clr flex;
+}

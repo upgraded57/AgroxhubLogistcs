@@ -19,7 +19,5 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   }
-  return (
-    <AdminContext.Provider value={{ user }}>{children}</AdminContext.Provider>
-  );
+  return <AdminContext value={{ user }}>{children}</AdminContext>;
 };

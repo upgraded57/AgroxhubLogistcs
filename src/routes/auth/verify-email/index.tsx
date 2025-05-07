@@ -11,6 +11,7 @@ import failAnimation from "@/assets/json/AnimationFail.json";
 import loadingAnimation from "@/assets/json/AnimationLoading.json";
 import { useEffect } from "react";
 import { useActivateAccount, useResendActivationLink } from "@/api/auth";
+import ButtonPending from "@/components/buttonPending";
 
 export const Route = createFileRoute("/auth/verify-email/")({
   component: RouteComponent,
@@ -83,7 +84,7 @@ function RouteComponent() {
               }}
               disabled={isResendingLink}
             >
-              {isResendingLink && <span className="loading loading-spinner" />}
+              {isResendingLink && <ButtonPending />}
               Request new Link
             </button>
           </div>
