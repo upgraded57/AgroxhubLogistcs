@@ -88,7 +88,7 @@ export default function AppLayout({
           </button>
         </div>
       )}
-      <div className="w-full h-screen bg-white flex items-start space-y-6 overflow-y-hidden">
+      <div className="main-container w-full bg-white flex items-start space-y-6 overflow-y-hidden">
         {/* Sidebar Large Screen */}
         <aside className="hidden min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr lg:flex flex-col justify-between">
           <div>

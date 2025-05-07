@@ -48,3 +48,7 @@ p {
 small {
   @apply text-xs font-light text-grey-clr flex;
 }
+
+.main-container {
+  height: 100dvh !important;
+}
