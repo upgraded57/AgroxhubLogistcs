@@ -196,6 +196,7 @@ function RouteComponent() {
                   id="avatar"
                   hidden
                   onChange={handleChooseAvatar}
+                  disabled={isUpdatingAvatar}
                   accept="image/png, image/jpeg, image/jpg"
                 />
                 <span
@@ -279,7 +280,7 @@ function RouteComponent() {
                 }
               >
                 <option value="" disabled>
-                  Lagos
+                  --Select State --
                 </option>
                 <option value="Lagos">Lagos</option>
               </select>
