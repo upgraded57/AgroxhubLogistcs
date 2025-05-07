@@ -40,6 +40,11 @@ function RouteComponent() {
 
   const handleUpdloadAvatar = () => {
     if (avatarFile) {
+      if (avatarFile.size > 2 * 1024 * 1024) {
+        return toast.error("Upload error", {
+          description: "Avatar size cannot exceed 2MB",
+        });
+      }
       const data = new FormData();
       data.append("avatar", avatarFile);
       updateAvatar(data).then(() => {
