@@ -50,28 +50,30 @@ function RouteComponent() {
   // Show an active lcda box and Populate initial selected region from API
   useEffect(() => {
     if (serviceRegions && allRegions) {
-      // show active region box
-      setActiveLcda(
-        () =>
-          allRegions.find((item) => serviceRegions[0].regionId === item.id)
-            ?.lcda || ""
-      );
-      const updated = serviceRegions
-        .map((region) => {
-          const foundRegion = allRegions.find(
-            (item) => item.id === region.regionId
-          );
-          if (foundRegion) {
-            return {
-              lcda: foundRegion.lcda,
-              regionId: foundRegion.id,
-            };
-          }
-          return null;
-        })
-        .filter(Boolean) as { lcda: string; regionId: string }[];
+      if (serviceRegions.length > 0) {
+        // show active region box
+        setActiveLcda(
+          () =>
+            allRegions.find((item) => serviceRegions[0].regionId === item.id)
+              ?.lcda || ""
+        );
+        const updated = serviceRegions
+          .map((region) => {
+            const foundRegion = allRegions.find(
+              (item) => item.id === region?.regionId
+            );
+            if (foundRegion) {
+              return {
+                lcda: foundRegion.lcda,
+                regionId: foundRegion.id,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean) as { lcda: string; regionId: string }[];
 
-      setSelectedRegions(updated);
+        setSelectedRegions(updated);
+      }
     }
   }, [serviceRegions, allRegions]);
 
