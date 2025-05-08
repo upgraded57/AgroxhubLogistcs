@@ -8,7 +8,7 @@ export default function OrdersTable({ orders }: { orders: number }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="table text-sm">
+      <table className="table text-sm table-pin-rows">
         <thead>
           <tr>
             <th />

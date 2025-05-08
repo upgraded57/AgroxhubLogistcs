@@ -52,3 +52,8 @@ small {
 .main-container {
   height: 100dvh !important;
 }
+
+.recharts-wrapper text {
+  font-size: 12px;
+  fill: var(--grey-clr);
+}

@@ -49,7 +49,7 @@ function RouteComponent() {
       data.append("avatar", avatarFile);
       updateAvatar(data).then(() => {
         queryClient.invalidateQueries({
-          queryKey: ["Profile", user?.id],
+          queryKey: ["Profile"],
         });
         handleClearAvatar();
       });
@@ -111,7 +111,7 @@ function RouteComponent() {
 
     updateProfile(data).then(() => {
       queryClient.invalidateQueries({
-        queryKey: ["Profile", user?.id],
+        queryKey: ["Profile"],
       });
     });
   };
@@ -155,7 +155,7 @@ function RouteComponent() {
   const handleUpdateProfileVisibility = () => {
     updateProfileVisibility().then(() => {
       queryClient.invalidateQueries({
-        queryKey: ["Profile", user?.id],
+        queryKey: ["Profile"],
       });
     });
   };

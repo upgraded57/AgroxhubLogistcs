@@ -1,4 +1,6 @@
+import EarningsChart from "@/components/charts/EarningsChart";
 import AppLayout from "@/components/layouts/AppLayout";
+import { ReaderIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(app)/finance/")({
@@ -10,9 +12,21 @@ function RouteComponent() {
     <AppLayout
       title="Finance"
       subtitle="Manage your financial information"
-      actions={<Filters />}
+      actions={
+        <div className="flex space-x-4">
+          <Filters />
+          <button className="btn bg-dark-green-clr border-none text-white">
+            <ReaderIcon />
+            Initial Payout
+          </button>
+        </div>
+      }
     >
       <Summary />
+      <div className="w-full p-6 bg-white shadow rounded-lg my-6">
+        <p className="text-sm mb-4">Earnings</p>
+        <EarningsChart />
+      </div>
     </AppLayout>
   );
 }
@@ -52,7 +66,7 @@ const Summary = () => {
 
 const Filters = () => {
   return (
-    <select name="filter" id="filter" className="select w-max select-sm">
+    <select name="filter" id="filter" className="select w-max">
       <option>This Month</option>
       <option>Last Month</option>
       <option>March</option>

@@ -1,6 +1,7 @@
 import {
   Bar,
   BarChart,
+  CartesianGrid,
   Legend,
   ResponsiveContainer,
   Tooltip,
@@ -48,6 +49,7 @@ export default function SummaryChart() {
   return (
     <ResponsiveContainer height={400}>
       <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="name" />
         <Tooltip />
         <Legend />

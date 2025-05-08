@@ -2,6 +2,7 @@ import { useGetProfile } from "@/api/profile";
 import { IMAGES } from "@/constants";
 import { useNavigate } from "@tanstack/react-router";
 import { createContext } from "react";
+import { toast } from "sonner";
 interface Prop {
   user: User | undefined;
 }
@@ -16,7 +17,16 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Fetch User info here
-  const { isLoading, data: user } = useGetProfile(token);
+  const { isLoading, data: user, isError } = useGetProfile(token);
+
+  if (isError) {
+    toast.error("Error", {
+      description:
+        "We're unable to load your account information at the moment. Please login again.",
+      id: "logout",
+    });
+    navigate({ to: "/auth/login" });
+  }
 
   if (isLoading) {
     return (
