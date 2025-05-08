@@ -20,7 +20,6 @@ function RouteComponent() {
     ) as { email: string; password: string };
 
     mutateAsync(data).then((res) => {
-      localStorage.setItem("userId", res.data.userId);
       localStorage.setItem("token", res.data.token);
       navigate({ to: "/" });
     });

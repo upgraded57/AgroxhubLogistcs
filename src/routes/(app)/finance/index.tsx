@@ -7,8 +7,57 @@ export const Route = createFileRoute("/(app)/finance/")({
 
 function RouteComponent() {
   return (
-    <AppLayout title="Finance" subtitle="Manage your financial information">
-      <h1>Finance</h1>
+    <AppLayout
+      title="Finance"
+      subtitle="Manage your financial information"
+      actions={<Filters />}
+    >
+      <Summary />
     </AppLayout>
   );
 }
+
+const Summary = () => {
+  const stats = [
+    {
+      title: "Total Earnings",
+      count: "276",
+    },
+    {
+      title: "From Distance",
+      count: "116",
+    },
+    {
+      title: "From Deliverables",
+      count: 80,
+    },
+    {
+      title: "Withdrawable Balance",
+      count: "N27.6k",
+    },
+  ];
+  return (
+    <div className="stats bg-white w-full shadow">
+      {stats.map((item, idx) => (
+        <div className="stat min-w-[200px]" key={idx}>
+          <div className="stat-title">{item.title}</div>
+          <div className="stat-value text-dark-green-clr my-1 pl-2">
+            {item.count}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Filters = () => {
+  return (
+    <select name="filter" id="filter" className="select w-max select-sm">
+      <option>This Month</option>
+      <option>Last Month</option>
+      <option>March</option>
+      <option>February</option>
+      <option>January</option>
+    </select>
+  );
+};
