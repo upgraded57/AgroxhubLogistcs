@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import "../App.css";
-import AppLayout from "@/components/layouts/appLayout";
 import {
   ArrowRightIcon,
   StarFilledIcon,
@@ -9,6 +8,7 @@ import {
 import SummaryChart from "@/components/charts/summaryChart";
 import EarningsTable from "@/components/tables/earningsTable";
 import OrderTable from "@/components/tables/orderTable";
+import AppLayout from "@/components/layouts/appLayout";
 
 export const Route = createFileRoute("/")({
   component: App,
