@@ -1,4 +1,4 @@
-import { AdminContext } from "@/context/AdminProvider";
+import { AdminContext } from "@/context/adminProvider";
 import { useNavigate } from "@tanstack/react-router";
 import { use, useEffect } from "react";
 

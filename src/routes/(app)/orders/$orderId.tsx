@@ -1,6 +1,6 @@
-import AppLayout from "@/components/layouts/AppLayout";
+import AppLayout from "@/components/layouts/appLayout";
 import Pending from "@/components/pending";
-import OrdersTable from "@/components/tables/OrdersTable";
+import OrdersTable from "@/components/tables/ordersTable";
 import {
   AvatarIcon,
   CaretDownIcon,

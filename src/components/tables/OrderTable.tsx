@@ -29,8 +29,12 @@ export default function OrderTable({ orders }: { orders: number }) {
               </th>
               <td>SM_1318193656_JHKF</td>
               <td>20</td>
-              <td>Somewhere Street, some location, Somewhere in Lagos</td>
-              <td>Somewhere Street, some location, Somewhere in Lagos</td>
+              <td className="min-w-[300px]">
+                Somewhere Street, some location, Somewhere in Lagos
+              </td>
+              <td className="min-w-[300px]">
+                Somewhere Street, some location, Somewhere in Lagos
+              </td>
               <td>Oct 21st, 2025</td>
               <td>
                 <div className="dropdown dropdown-left dropdown-center">

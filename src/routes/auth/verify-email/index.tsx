@@ -1,4 +1,3 @@
-import AuthLayout from "@/components/layouts/AuthLayout";
 import {
   createFileRoute,
   Link,
@@ -38,7 +37,11 @@ function RouteComponent() {
   }, []);
 
   return (
-    <AuthLayout title="Verify email" subtitle="Verify your email address">
+    <div className="flex flex-col justify-between h-full">
+      <span className="space-y-2">
+        <h2 className="font-semibold text-xl">Verify email</h2>
+        <p className="text-sm">Verify your email address</p>
+      </span>
       <div className="flex-1 mt-6 flex flex-col gap-4">
         <Lottie
           animationData={
@@ -90,6 +93,15 @@ function RouteComponent() {
           </div>
         )}
       </div>
-    </AuthLayout>
+      <span className="flex space-x-2">
+        <p className="text-sm">"Already have an account?</p>
+        <Link
+          to="/auth/login"
+          className="text-sm text-dark-green-clr hover:underline"
+        >
+          Click to Login
+        </Link>
+      </span>
+    </div>
   );
 }

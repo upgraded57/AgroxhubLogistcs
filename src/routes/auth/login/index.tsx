@@ -1,5 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import AuthLayout from "@/components/layouts/AuthLayout";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useLogin } from "@/api/auth";
@@ -26,7 +25,11 @@ function RouteComponent() {
   };
 
   return (
-    <AuthLayout>
+    <div className="flex flex-col justify-between h-full">
+      <span className="space-y-2">
+        <h2 className="font-semibold text-xl">Login</h2>
+        <p className="text-sm">Login to your account</p>
+      </span>
       <form className="w-full space-y-6" onSubmit={handleLogin}>
         <label htmlFor="email" className="block w-full">
           <p className="text-sm">Email Address</p>
@@ -70,6 +73,15 @@ function RouteComponent() {
           Login
         </button>
       </form>
-    </AuthLayout>
+      <span className="flex space-x-2">
+        <p className="text-sm">"Don't have an account</p>
+        <Link
+          to="/auth/register"
+          className="text-sm text-dark-green-clr hover:underline"
+        >
+          Click to Register
+        </Link>
+      </span>
+    </div>
   );
 }

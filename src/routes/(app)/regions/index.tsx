@@ -1,4 +1,4 @@
-import AppLayout from "@/components/layouts/AppLayout";
+import AppLayout from "@/components/layouts/appLayout";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";

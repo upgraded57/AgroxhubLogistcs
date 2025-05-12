@@ -11,6 +11,8 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth/route'
+import { Route as appRouteImport } from './routes/(app)/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AuthVerifyEmailIndexImport } from './routes/auth/verify-email/index'
@@ -27,6 +29,17 @@ import { Route as appOrdersOrderIdImport } from './routes/(app)/orders/$orderId'
 
 // Create/Update Routes
 
+const AuthRouteRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const appRouteRoute = appRouteImport.update({
+  id: '/(app)',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -34,75 +47,75 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const AuthIndexRoute = AuthIndexImport.update({
-  id: '/auth/',
-  path: '/auth/',
-  getParentRoute: () => rootRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexImport.update({
-  id: '/auth/verify-email/',
-  path: '/auth/verify-email/',
-  getParentRoute: () => rootRoute,
+  id: '/verify-email/',
+  path: '/verify-email/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 const AuthRegisterIndexRoute = AuthRegisterIndexImport.update({
-  id: '/auth/register/',
-  path: '/auth/register/',
-  getParentRoute: () => rootRoute,
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
-  id: '/auth/login/',
-  path: '/auth/login/',
-  getParentRoute: () => rootRoute,
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 const AuthCheckEmailIndexRoute = AuthCheckEmailIndexImport.update({
-  id: '/auth/check-email/',
-  path: '/auth/check-email/',
-  getParentRoute: () => rootRoute,
+  id: '/check-email/',
+  path: '/check-email/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 const appRegionsIndexRoute = appRegionsIndexImport.update({
-  id: '/(app)/regions/',
+  id: '/regions/',
   path: '/regions/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appProfileIndexRoute = appProfileIndexImport.update({
-  id: '/(app)/profile/',
+  id: '/profile/',
   path: '/profile/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appOrdersIndexRoute = appOrdersIndexImport.update({
-  id: '/(app)/orders/',
+  id: '/orders/',
   path: '/orders/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appNotificationsIndexRoute = appNotificationsIndexImport.update({
-  id: '/(app)/notifications/',
+  id: '/notifications/',
   path: '/notifications/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appFinanceIndexRoute = appFinanceIndexImport.update({
-  id: '/(app)/finance/',
+  id: '/finance/',
   path: '/finance/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appDeliverablesIndexRoute = appDeliverablesIndexImport.update({
-  id: '/(app)/deliverables/',
+  id: '/deliverables/',
   path: '/deliverables/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appOrdersOrderIdRoute = appOrdersOrderIdImport.update({
-  id: '/(app)/orders/$orderId',
+  id: '/orders/$orderId',
   path: '/orders/$orderId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -116,98 +129,157 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/auth/': {
-      id: '/auth/'
+    '/(app)': {
+      id: '/(app)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof appRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth': {
+      id: '/auth'
       path: '/auth'
       fullPath: '/auth'
-      preLoaderRoute: typeof AuthIndexImport
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexImport
+      parentRoute: typeof AuthRouteImport
     }
     '/(app)/orders/$orderId': {
       id: '/(app)/orders/$orderId'
       path: '/orders/$orderId'
       fullPath: '/orders/$orderId'
       preLoaderRoute: typeof appOrdersOrderIdImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/deliverables/': {
       id: '/(app)/deliverables/'
       path: '/deliverables'
       fullPath: '/deliverables'
       preLoaderRoute: typeof appDeliverablesIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/finance/': {
       id: '/(app)/finance/'
       path: '/finance'
       fullPath: '/finance'
       preLoaderRoute: typeof appFinanceIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/notifications/': {
       id: '/(app)/notifications/'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof appNotificationsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/orders/': {
       id: '/(app)/orders/'
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof appOrdersIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/profile/': {
       id: '/(app)/profile/'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof appProfileIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/(app)/regions/': {
       id: '/(app)/regions/'
       path: '/regions'
       fullPath: '/regions'
       preLoaderRoute: typeof appRegionsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof appRouteImport
     }
     '/auth/check-email/': {
       id: '/auth/check-email/'
-      path: '/auth/check-email'
+      path: '/check-email'
       fullPath: '/auth/check-email'
       preLoaderRoute: typeof AuthCheckEmailIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthRouteImport
     }
     '/auth/login/': {
       id: '/auth/login/'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthRouteImport
     }
     '/auth/register/': {
       id: '/auth/register/'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthRouteImport
     }
     '/auth/verify-email/': {
       id: '/auth/verify-email/'
-      path: '/auth/verify-email'
+      path: '/verify-email'
       fullPath: '/auth/verify-email'
       preLoaderRoute: typeof AuthVerifyEmailIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface appRouteRouteChildren {
+  appOrdersOrderIdRoute: typeof appOrdersOrderIdRoute
+  appDeliverablesIndexRoute: typeof appDeliverablesIndexRoute
+  appFinanceIndexRoute: typeof appFinanceIndexRoute
+  appNotificationsIndexRoute: typeof appNotificationsIndexRoute
+  appOrdersIndexRoute: typeof appOrdersIndexRoute
+  appProfileIndexRoute: typeof appProfileIndexRoute
+  appRegionsIndexRoute: typeof appRegionsIndexRoute
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appOrdersOrderIdRoute: appOrdersOrderIdRoute,
+  appDeliverablesIndexRoute: appDeliverablesIndexRoute,
+  appFinanceIndexRoute: appFinanceIndexRoute,
+  appNotificationsIndexRoute: appNotificationsIndexRoute,
+  appOrdersIndexRoute: appOrdersIndexRoute,
+  appProfileIndexRoute: appProfileIndexRoute,
+  appRegionsIndexRoute: appRegionsIndexRoute,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthIndexRoute: typeof AuthIndexRoute
+  AuthCheckEmailIndexRoute: typeof AuthCheckEmailIndexRoute
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthIndexRoute: AuthIndexRoute,
+  AuthCheckEmailIndexRoute: AuthCheckEmailIndexRoute,
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+  AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/auth': typeof AuthIndexRoute
+  '/': typeof appRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/auth/': typeof AuthIndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
   '/deliverables': typeof appDeliverablesIndexRoute
   '/finance': typeof appFinanceIndexRoute
@@ -222,7 +294,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof appRouteRouteWithChildren
   '/auth': typeof AuthIndexRoute
   '/orders/$orderId': typeof appOrdersOrderIdRoute
   '/deliverables': typeof appDeliverablesIndexRoute
@@ -240,6 +312,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/(app)': typeof appRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
   '/auth/': typeof AuthIndexRoute
   '/(app)/orders/$orderId': typeof appOrdersOrderIdRoute
   '/(app)/deliverables/': typeof appDeliverablesIndexRoute
@@ -259,6 +333,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/auth/'
     | '/orders/$orderId'
     | '/deliverables'
     | '/finance'
@@ -288,6 +363,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/(app)'
+    | '/auth'
     | '/auth/'
     | '/(app)/orders/$orderId'
     | '/(app)/deliverables/'
@@ -305,34 +382,14 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthIndexRoute: typeof AuthIndexRoute
-  appOrdersOrderIdRoute: typeof appOrdersOrderIdRoute
-  appDeliverablesIndexRoute: typeof appDeliverablesIndexRoute
-  appFinanceIndexRoute: typeof appFinanceIndexRoute
-  appNotificationsIndexRoute: typeof appNotificationsIndexRoute
-  appOrdersIndexRoute: typeof appOrdersIndexRoute
-  appProfileIndexRoute: typeof appProfileIndexRoute
-  appRegionsIndexRoute: typeof appRegionsIndexRoute
-  AuthCheckEmailIndexRoute: typeof AuthCheckEmailIndexRoute
-  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
-  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
-  AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
+  appRouteRoute: typeof appRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthIndexRoute: AuthIndexRoute,
-  appOrdersOrderIdRoute: appOrdersOrderIdRoute,
-  appDeliverablesIndexRoute: appDeliverablesIndexRoute,
-  appFinanceIndexRoute: appFinanceIndexRoute,
-  appNotificationsIndexRoute: appNotificationsIndexRoute,
-  appOrdersIndexRoute: appOrdersIndexRoute,
-  appProfileIndexRoute: appProfileIndexRoute,
-  appRegionsIndexRoute: appRegionsIndexRoute,
-  AuthCheckEmailIndexRoute: AuthCheckEmailIndexRoute,
-  AuthLoginIndexRoute: AuthLoginIndexRoute,
-  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
-  AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -346,58 +403,82 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth/",
+        "/(app)",
+        "/auth"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/(app)": {
+      "filePath": "(app)/route.tsx",
+      "children": [
         "/(app)/orders/$orderId",
         "/(app)/deliverables/",
         "/(app)/finance/",
         "/(app)/notifications/",
         "/(app)/orders/",
         "/(app)/profile/",
-        "/(app)/regions/",
+        "/(app)/regions/"
+      ]
+    },
+    "/auth": {
+      "filePath": "auth/route.tsx",
+      "children": [
+        "/auth/",
         "/auth/check-email/",
         "/auth/login/",
         "/auth/register/",
         "/auth/verify-email/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
     "/auth/": {
-      "filePath": "auth/index.tsx"
+      "filePath": "auth/index.tsx",
+      "parent": "/auth"
     },
     "/(app)/orders/$orderId": {
-      "filePath": "(app)/orders/$orderId.tsx"
+      "filePath": "(app)/orders/$orderId.tsx",
+      "parent": "/(app)"
     },
     "/(app)/deliverables/": {
-      "filePath": "(app)/deliverables/index.tsx"
+      "filePath": "(app)/deliverables/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/finance/": {
-      "filePath": "(app)/finance/index.tsx"
+      "filePath": "(app)/finance/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/notifications/": {
-      "filePath": "(app)/notifications/index.tsx"
+      "filePath": "(app)/notifications/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/orders/": {
-      "filePath": "(app)/orders/index.tsx"
+      "filePath": "(app)/orders/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/profile/": {
-      "filePath": "(app)/profile/index.tsx"
+      "filePath": "(app)/profile/index.tsx",
+      "parent": "/(app)"
     },
     "/(app)/regions/": {
-      "filePath": "(app)/regions/index.tsx"
+      "filePath": "(app)/regions/index.tsx",
+      "parent": "/(app)"
     },
     "/auth/check-email/": {
-      "filePath": "auth/check-email/index.tsx"
+      "filePath": "auth/check-email/index.tsx",
+      "parent": "/auth"
     },
     "/auth/login/": {
-      "filePath": "auth/login/index.tsx"
+      "filePath": "auth/login/index.tsx",
+      "parent": "/auth"
     },
     "/auth/register/": {
-      "filePath": "auth/register/index.tsx"
+      "filePath": "auth/register/index.tsx",
+      "parent": "/auth"
     },
     "/auth/verify-email/": {
-      "filePath": "auth/verify-email/index.tsx"
+      "filePath": "auth/verify-email/index.tsx",
+      "parent": "/auth"
     }
   }
 }

@@ -10,7 +10,7 @@ function RouteComponent() {
   // Clear login info here before navigation
   useEffect(() => {
     localStorage.removeItem("userId");
-    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
     toast.success("Logout successful", {
       description: "Hope to have you back soon",
       id: "logout",

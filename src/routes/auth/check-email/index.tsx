@@ -1,5 +1,4 @@
-import AuthLayout from "@/components/layouts/AuthLayout";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import Lottie from "lottie-react";
 import emailAnimation from "@/assets/json/emailAnimation.json";
 
@@ -9,10 +8,11 @@ export const Route = createFileRoute("/auth/check-email/")({
 
 function RouteComponent() {
   return (
-    <AuthLayout
-      title="Registration Successful"
-      subtitle="Check your email inbox"
-    >
+    <div className="flex flex-col justify-between h-full">
+      <span className="space-y-2">
+        <h2 className="font-semibold text-xl">Registration Successful</h2>
+        <p className="text-sm">Check your email inbox</p>
+      </span>
       <div className="flex-1 mt-6 flex flex-col gap-4">
         <Lottie
           animationData={emailAnimation}
@@ -33,6 +33,15 @@ function RouteComponent() {
           </a>
         </div>
       </div>
-    </AuthLayout>
+      <span className="flex space-x-2">
+        <p className="text-sm">"Already have an account?</p>
+        <Link
+          to="/auth/login"
+          className="text-sm text-dark-green-clr hover:underline"
+        >
+          Click to Login
+        </Link>
+      </span>
+    </div>
   );
 }

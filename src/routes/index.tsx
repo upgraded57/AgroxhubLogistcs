@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import "../App.css";
-import AppLayout from "@/components/layouts/AppLayout";
+import AppLayout from "@/components/layouts/appLayout";
 import {
   ArrowRightIcon,
   StarFilledIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
-import SummaryChart from "@/components/charts/SummaryChart";
-import EarningsTable from "@/components/tables/EarningsTable";
-import OrderTable from "@/components/tables/OrderTable";
+import SummaryChart from "@/components/charts/summaryChart";
+import EarningsTable from "@/components/tables/earningsTable";
+import OrderTable from "@/components/tables/orderTable";
 
 export const Route = createFileRoute("/")({
   component: App,

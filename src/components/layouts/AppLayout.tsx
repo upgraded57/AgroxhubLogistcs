@@ -1,5 +1,5 @@
 import { IMAGES } from "@/constants";
-import { AdminContext, AdminProvider } from "@/context/AdminProvider";
+import { AdminContext, AdminProvider } from "@/context/adminProvider";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import {
   ArchiveIcon,
@@ -16,6 +16,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { use, useState } from "react";
+import { AvatarComp } from "../avatarComp";
 
 export default function AppLayout({
   children,
@@ -28,8 +29,6 @@ export default function AppLayout({
   subtitle: string;
   actions?: React.ReactNode;
 }) {
-  const [navOpen, setNavOpen] = useState(false);
-  const user = use(AdminContext)?.user;
   const isLoadingRoute = useRouterState({
     select: (state) => state.status === "pending",
   });
@@ -38,111 +37,22 @@ export default function AppLayout({
     select: (state) => state.location.pathname,
   });
 
-  const [showNotice, setShowNotice] = useState(
-    !!sessionStorage.getItem("closeNotice")
-  );
-
-  const AvatarComp = () => {
-    const intitials = user?.name.split(" ");
-    const firstInitials = intitials?.[0][0] || "";
-    const secondInitials = intitials?.[1][0] || "";
-    return user?.avatar ? (
-      <div className="avatar">
-        <div className="w-10 rounded-full">
-          <img src={user?.avatar} />
-        </div>
-      </div>
-    ) : (
-      <div className="avatar avatar-placeholder">
-        <div className="bg-dark-green-clr text-white w-10 rounded-full">
-          <span className="text-lg">{firstInitials + secondInitials}</span>
-        </div>
-      </div>
-    );
-  };
   return (
     <AdminProvider>
-      {!showNotice && (
-        <div className="py-2 w-full flex items-center justify-center bg-yellow-600 text-white gap-2">
-          <ExclamationTriangleIcon />
-          <p className="text-sm">Early Access.</p>
-          <p
-            className="text-sm underline cursor-pointer"
-            onClick={() =>
-              (
-                document.getElementById("earlyAccessModal") as HTMLDialogElement
-              ).showModal()
-            }
-          >
-            Learn More
-          </p>
-
-          <button
-            className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
-            onClick={() => {
-              sessionStorage.setItem("closeNotice", "1");
-              setShowNotice(true);
-            }}
-          >
-            <Cross1Icon className="text-base-content" />
-          </button>
-        </div>
-      )}
+      <EarlyAccessNotice />
       <div className="main-container w-full bg-white flex items-start space-y-6 overflow-y-hidden">
         {/* Sidebar Large Screen */}
-        <aside className="hidden min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr lg:flex flex-col justify-between">
-          <div>
-            <div className="h-[70px] w-full flex items-center justify-center">
-              <img src={IMAGES.logo} alt="Agroxhub" className="w-[148px]" />
-            </div>
-            <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
-          </div>
-          <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
-            <div className="flex items-center space-x-3">
-              <AvatarComp />
-              <span className="space-y-0 overflow-x-hidden">
-                <p className="font-medium text-sm">{user?.name}</p>
-                <small className="truncate text-ellipsis">{user?.email}</small>
-              </span>
-            </div>
-          </div>
-        </aside>
+        <AsideComp isLoadingRoute={isLoadingRoute} pathName={pathName} />
 
         {/* Main */}
         <div className="w-full h-full overflow-y-scroll bg-light-grey-clr">
           {/* Topbar - Small Screen */}
-          <div className="w-full bg-white flex justify-between items-center lg:hidden shadow mb-4 h-15 px-4 sticky top-0 z-[20]">
-            <div className="flex space-x-2 items-center">
-              <button
-                className="btn btn-square bg-transparent p-2 h-auto w-auto btn-ghost"
-                onClick={() => setNavOpen((prev) => !prev)}
-              >
-                {navOpen ? <Cross1Icon /> : <HamburgerMenuIcon />}
-              </button>
-              <img
-                src={IMAGES.logo}
-                alt="Agroxhub"
-                className="w-[140px] h-auto"
-              />
-            </div>
-            <AvatarComp />
-          </div>
-
-          {/* Sidebar small screen */}
-          <div
-            className={`fixed top-15 w-full z-10 h-screen bg-black/50 transition-all ${navOpen ? "left-0" : "-left-[100%]"}`}
-          >
-            <div
-              className={`w-[300px] border-t-[1px] border-t-light-grey-clr h-full bg-white shadow-lg`}
-            >
-              <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
-            </div>
-          </div>
+          <MobileNav isLoadingRoute={isLoadingRoute} pathName={pathName} />
 
           {/* Content */}
           <main className="px-4 lg:p-6">
-            <div className="flex flex-col lg:flex-row items-start space-y-4 lg:space-y-0 justify-start lg:items-center lg:justify-between mb-6">
-              <div className="space-y-1 md:max-w-[400px] lg:max-w-max">
+            <div className="flex flex-col lg:flex-row items-start space-y-4 lg:space-y-0 justify-start lg:items-center lg:justify-between mb-6 max-w-full">
+              <div className="space-y-1">
                 <h2 className="font-medium text-lg">{title}</h2>
                 <p className="text-sm font-light">{subtitle}</p>
               </div>
@@ -152,35 +62,6 @@ export default function AppLayout({
           </main>
         </div>
       </div>
-
-      {/* Early access dialog */}
-      <dialog id="earlyAccessModal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-semibold text-lg">Early Access!</h3>
-          <p className="py-4 text-sm">
-            This is the early access version of the app. Some pages may contain
-            placeholder texts with dummy data and some functionalities may not
-            work. Features will continue to roll out, so check out often!
-          </p>
-          <p className="py-4 text-sm">
-            We welcome suggestions! Reach out to us at{" "}
-            <a
-              href="mailto:developer@agroxhub.com"
-              target="_blank"
-              className="font-medium underline"
-            >
-              developer@agroxhub.com
-            </a>{" "}
-            to submit a suggestion
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
     </AdminProvider>
   );
 }
@@ -263,4 +144,137 @@ const NavLinks = ({
       )}
     </Link>
   ));
+};
+
+const AsideComp = ({
+  isLoadingRoute,
+  pathName,
+}: {
+  isLoadingRoute: boolean;
+  pathName: string;
+}) => {
+  const user = use(AdminContext).user;
+  return (
+    <aside className="hidden min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr lg:flex flex-col justify-between">
+      <div>
+        <div className="h-[70px] w-full flex items-center justify-center">
+          <img src={IMAGES.logo} alt="Agroxhub" className="w-[148px]" />
+        </div>
+        <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
+      </div>
+      <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
+        <div className="flex items-center space-x-3">
+          <AvatarComp user={user} />
+          <span className="space-y-0 overflow-x-hidden">
+            <p className="font-medium text-sm">{user?.name}</p>
+            <small className="truncate text-ellipsis">{user?.email}</small>
+          </span>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+const MobileNav = ({
+  isLoadingRoute,
+  pathName,
+}: {
+  isLoadingRoute: boolean;
+  pathName: string;
+}) => {
+  const user = use(AdminContext)?.user;
+  const [navOpen, setNavOpen] = useState(false);
+  return (
+    <>
+      <div className="w-full bg-white flex justify-between items-center lg:hidden shadow mb-4 h-15 px-4 sticky top-0 z-[20]">
+        <div className="flex space-x-2 items-center">
+          <button
+            className="btn btn-square bg-transparent p-2 h-auto w-auto btn-ghost"
+            onClick={() => setNavOpen((prev) => !prev)}
+          >
+            {navOpen ? <Cross1Icon /> : <HamburgerMenuIcon />}
+          </button>
+          <img src={IMAGES.logo} alt="Agroxhub" className="w-[140px] h-auto" />
+        </div>
+        <AvatarComp user={user} />
+      </div>
+
+      {/* Sidebar small screen */}
+      <div
+        className={`fixed top-15 w-full z-10 h-screen bg-black/50 transition-all ${navOpen ? "left-0" : "-left-[100%]"}`}
+      >
+        <div
+          className={`w-[300px] border-t-[1px] border-t-light-grey-clr h-full bg-white shadow-lg`}
+        >
+          <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const EarlyAccessNotice = () => {
+  const [showNotice, setShowNotice] = useState(
+    !!sessionStorage.getItem("closeNotice")
+  );
+  return (
+    !showNotice && (
+      <>
+        <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2">
+          <ExclamationTriangleIcon />
+          <p className="text-sm">Early Access.</p>
+          <p
+            className="text-sm underline cursor-pointer"
+            onClick={() =>
+              (
+                document.getElementById("earlyAccessModal") as HTMLDialogElement
+              ).showModal()
+            }
+          >
+            Learn More
+          </p>
+
+          <button
+            className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
+            onClick={() => {
+              sessionStorage.setItem("closeNotice", "1");
+              setShowNotice(true);
+            }}
+          >
+            <Cross1Icon className="text-base-content" />
+          </button>
+        </div>
+
+        {/* Early access dialog */}
+        <dialog id="earlyAccessModal" className="modal">
+          <div className="modal-box">
+            <h3 className="font-semibold text-lg">Early Access!</h3>
+            <p className="py-4 text-sm">
+              This is the early access version of the app. Some pages may
+              contain placeholder texts with dummy data and some functionalities
+              may not work. Features will continue to roll out, so check out
+              often!
+            </p>
+            <p className="py-4 text-sm">
+              We welcome suggestions! Reach out to us at{" "}
+              <a
+                href="mailto:developer@agroxhub.com"
+                target="_blank"
+                className="font-medium underline"
+              >
+                developer@agroxhub.com
+              </a>{" "}
+              to submit a suggestion
+            </p>
+            <div className="modal-action">
+              <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </>
+    )
+  );
 };
