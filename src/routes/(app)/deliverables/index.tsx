@@ -172,6 +172,10 @@ function RouteComponent() {
       ) : (
         <div className="list">
           {AllCategories?.map((category, idx) => {
+            const selected = selectedDeliverables.find(
+              (item) => item.id === category.id
+            );
+            const unitCost = selected ? selected.unitCost : 0;
             return (
               <div className="list-row hover:bg-base-300 flex flex-col lg:flex-row gap-0 lg:gap-4 items-start lg:items-center justify-start lg:justify-between h-auto">
                 <label
@@ -203,11 +207,9 @@ function RouteComponent() {
                       <input
                         type="number"
                         placeholder="200"
-                        defaultValue={
-                          selectedDeliverables.find(
-                            (item) => item.id === category.id
-                          )?.unitCost
-                        }
+                        min={1}
+                        onFocus={(e) => e.target.select()}
+                        defaultValue={unitCost}
                         onChange={(e) =>
                           handleSetUnitCost(category.id, e.target.value)
                         }
