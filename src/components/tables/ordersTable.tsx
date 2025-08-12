@@ -1,50 +1,47 @@
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "@tanstack/react-router";
+import moment from "moment";
+import { StatusBadge } from "../status-badge";
 
-export default function OrdersTable({ orders }: { orders: number }) {
-  let arr: number[] = [];
-  for (let i = 0; i < orders; i++) {
-    arr.push(i);
-  }
-
+export default function OrdersTable({ orders }: { orders: Order[] }) {
+  const navigate = useNavigate();
   return (
     <div className="overflow-x-auto">
-      <table className="table text-sm table-pin-rows">
+      <table className="table text-sm">
         <thead>
           <tr>
-            <th />
-            <th className="font-medium">Product</th>
-            <th className="font-medium">Quantity</th>
-            <th className="font-medium">Weight</th>
-            <th className="font-medium">Action</th>
+            <th className="font-medium">Status</th>
+            <th className="font-medium">Products</th>
+            <th className="font-medium">Pickup Address</th>
+            <th className="font-medium">Delivery Address</th>
+            <th className="font-medium">Order Date</th>
+            <th className="font-medium">Delivery Date</th>
           </tr>
         </thead>
         <tbody>
-          {arr.map((_, idx) => (
-            <tr key={idx} className="hover:bg-light-grey-clr">
-              <th className="w-4 pr-0 m-0">
-                <StatusBadge />
+          {orders.map((order, idx) => (
+            <tr
+              key={idx}
+              className="hover:bg-base-200 cursor-pointer"
+              onClick={() =>
+                navigate({
+                  to: "/orders/$orderId",
+                  params: { orderId: order.id },
+                })
+              }
+            >
+              <th>
+                <StatusBadge status={order?.status} />
               </th>
-              <td className="w-full">Fresh Tomatoes</td>
-              <td className="w-max text-nowrap">20 Baskets</td>
-              <td className="w-max text-nowrap">102kg</td>
-              <td className="w-max">
-                <div className="dropdown dropdown-left dropdown-center">
-                  <div tabIndex={0} role="button">
-                    <button className="btn btn-sm btn-ghost btn-square">
-                      <DotsVerticalIcon />
-                    </button>
-                  </div>
-                  <ul
-                    tabIndex={0}
-                    className="dropdown-content bg-base-100 menu rounded-box z-1 w-max p-2 shadow-sm border-[1px] border-base-300"
-                  >
-                    <li>
-                      <button className="btn btn-ghost font-normal w-max">
-                        View Product Images
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+              <td>{order.productsCount}</td>
+              <td className="min-w-[300px]">{order.pickupAddress || "---"}</td>
+              <td className="min-w-[300px]">{order.deliveryAddress}</td>
+              <td className="text-nowrap">
+                {moment(order.createdAt).format("DD MMM, YYYY")}
+              </td>
+              <td className="text-nowrap">
+                {order.deliveryDate
+                  ? moment(order.deliveryDate).format("DD MMM, YYYY")
+                  : "Not Set"}
               </td>
             </tr>
           ))}
@@ -53,9 +50,3 @@ export default function OrdersTable({ orders }: { orders: number }) {
     </div>
   );
 }
-
-const StatusBadge = () => {
-  return (
-    <span className="w-3 h-3 block rounded-full bg-light-green-clr border-2 border-dark-green-clr" />
-  );
-};

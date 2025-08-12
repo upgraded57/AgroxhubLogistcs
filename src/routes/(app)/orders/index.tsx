@@ -1,12 +1,32 @@
+import { useGetOrders } from "@/api/order";
 import AppLayout from "@/components/layouts/appLayout";
-import OrderTable from "@/components/tables/orderTable";
-import { createFileRoute } from "@tanstack/react-router";
+import OrdersTable from "@/components/tables/ordersTable";
+import {
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(app)/orders/")({
   component: RouteComponent,
+  validateSearch: (search: QueryTypes) => {
+    return {
+      status: typeof search.status === "string" ? search.status : undefined,
+    };
+  },
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+  const params = useSearch({ from: "/(app)/orders/" });
+  const {
+    isLoading,
+    isFetching,
+    data: orders,
+    isError,
+  } = useGetOrders({
+    status: params.status,
+  });
   return (
     <AppLayout title="Orders" subtitle="See and manage your orders from here">
       <div className="rounded-lg shadow p-4 bg-white">
@@ -16,24 +36,44 @@ function RouteComponent() {
           <select
             defaultValue="Pick a Status"
             className="select select-sm w-max"
+            onChange={(e) => {
+              navigate({
+                to: "/orders",
+                search: {
+                  status: e.target.value.length
+                    ? (e.target.value as QueryTypes["status"])
+                    : undefined,
+                },
+              });
+            }}
           >
-            <option disabled={true}>Pick a Status</option>
-            <option>Delivered</option>
-            <option>In Transit</option>
-            <option>Pending</option>
-            <option>Returned</option>
+            <option value="">All Status</option>
+            <option value="delivered">Delivered</option>
+            <option value="in_transit">In Transit</option>
+            <option value="pending">Pending</option>
+            <option value="returned">Returned</option>
           </select>
         </div>
 
-        <OrderTable orders={20} />
-        {/* Pagination */}
-        <div className="flex justify-center py-4">
-          <div className="join">
-            <button className="join-item btn">«</button>
-            <button className="join-item btn">Page 1</button>
-            <button className="join-item btn">»</button>
+        {isLoading || isFetching ? (
+          <div className="w-full">
+            <span className="loading loading-spinner" />
           </div>
-        </div>
+        ) : isError || !orders || orders.length === 0 ? (
+          "No order found!"
+        ) : (
+          <>
+            <OrdersTable orders={orders} />
+            {/* Pagination */}
+            <div className="flex justify-center py-4">
+              <div className="join">
+                <button className="join-item btn">«</button>
+                <button className="join-item btn">Page 1</button>
+                <button className="join-item btn">»</button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </AppLayout>
   );

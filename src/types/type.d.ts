@@ -40,21 +40,68 @@ interface Product {
   reviews?: Review[];
 }
 
-interface Notification {
+interface NotificationList {
   id: string;
   type:
     | "follow"
     | "productReview"
     | "productSave"
-    | "productOrder"
-    | "productDelivery"
-    | "productShipped"
-    | "productClicks";
+    | "orderPlacement"
+    | "orderPickup"
+    | "orderInTransit"
+    | "orderDelivery"
+    | "milestone"
+    | "orderAssignment"
+    | "outOfStock";
   unread: boolean;
   subject: string;
-  content: string;
-  attachment: string;
+  summary: string;
+  attachment?: string;
   createdAt: string;
+  product?: {
+    id: string;
+    name: string;
+    image: string;
+    unit: string;
+    slug: string;
+  };
+  products?: Array<{
+    id: string;
+    name: string;
+    image: string;
+    unit: string;
+    quantity: number;
+    slug: string;
+  }>;
+  buyer?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+  follower?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+  logisticsProvider?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+  order?: {
+    id: string;
+    amount: number;
+    createdAt: string;
+    deliveryAddress: string;
+    deliveryRegion: {
+      state: string;
+      lcda: string;
+      name: string;
+    };
+  };
+  productQuantity?: number;
+  pickupDate?: string;
+  deliveryDate?: string;
 }
 
 interface SavedItem {
@@ -120,35 +167,21 @@ interface CartItem {
 }
 
 interface Order {
-  id: string;
-  orderNumber: string;
-  userId?: string;
-  items: OrderItem[];
-  productsAmount: number;
-  logisticsAmount: number;
-  totalAmount: number;
-  vat: number;
-  paymentStatus: "pending" | "paid" | "failed" | "refunded";
-  createdAt: Date;
-  updatedAt: Date;
-  orderGroups: OrderGroup[];
   deliveryAddress: string;
-  deliveryRegion: Region;
-  deliveryRegionId: string;
-  status: "pending" | "in_transit" | "delivered" | "rejected" | "canceled";
-  referenceCode: string;
-  accessCode: string;
-  products: Product[];
-}
-
-interface OrderGroup {
+  deliveryCost: number;
+  createdAt: Date;
   id: string;
-  orderItems: OrderItem[];
-  sellerId: string;
+  pickupAddress: string;
+  productsCount: number;
+  deliveryAddress?: string;
+  deliveryDate?: Date;
+  pickupDate?: string;
+  products?: Array<Product>;
   status: "pending" | "in_transit" | "delivered" | "rejected" | "canceled";
-  logisticsProviderId?: string;
-  order: Order[];
-  sellerNote?: string;
+  user?: {
+    name: string;
+    avatar: string;
+  };
   logisticsNote?: string;
 }
 
@@ -173,4 +206,14 @@ interface SellerSummary {
   inTransitProducts: number;
   cartProducts: number;
   totalEarnings: number;
+}
+
+interface QueryTypes {
+  status:
+    | "all"
+    | "pending"
+    | "in_transit"
+    | "delivered"
+    | "returned"
+    | undefined;
 }

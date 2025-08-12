@@ -1,75 +1,128 @@
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Link } from "@tanstack/react-router";
+import { Cross2Icon, DotsVerticalIcon } from "@radix-ui/react-icons";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
-export default function OrderTable({ orders }: { orders: number }) {
-  let arr: number[] = [];
-  for (let i = 0; i < orders; i++) {
-    arr.push(i);
-  }
+export default function OrderTable({ products }: { products: Product[] }) {
+  const [images, setImages] = useState<Array<string>>([])
+
+  const handleShowModal = (type: "images") => {
+    const modalId = type === "images"? "imagesModal" : ""
+    const modal = document.getElementById(modalId) as HTMLDialogElement;
+    modal.showModal();
+  };
+
+  const handleCloseModal = (type: "images") => {
+    const modalId = type === "images"? "imagesModal" : ""
+    const modal = document.getElementById(modalId) as HTMLDialogElement;
+    modal.close();
+  };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table text-sm">
-        <thead>
-          <tr>
-            <th></th>
-            <th className="font-medium">Order ID</th>
-            <th className="font-medium">Products</th>
-            <th className="font-medium">Pickup Address</th>
-            <th className="font-medium">Delivery Address</th>
-            <th className="font-medium">Delivery Date</th>
-            <th className="font-medium">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {arr.map((_, idx) => (
-            <tr key={idx} className="hover:bg-base-200">
-              <th>
-                <StatusBadge />
-              </th>
-              <td>SM_1318193656_JHKF</td>
-              <td>20</td>
-              <td className="min-w-[300px]">
-                Somewhere Street, some location, Somewhere in Lagos
-              </td>
-              <td className="min-w-[300px]">
-                Somewhere Street, some location, Somewhere in Lagos
-              </td>
-              <td>Oct 21st, 2025</td>
-              <td>
-                <div className="dropdown dropdown-left dropdown-center">
-                  <div tabIndex={0} role="button">
-                    <button className="btn btn-sm btn-ghost btn-square">
-                      <DotsVerticalIcon />
-                    </button>
-                  </div>
-                  <ul
-                    tabIndex={0}
-                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-                  >
-                    <li>
-                      <Link
-                        to="/orders/$orderId"
-                        params={{
-                          orderId: "SM_1318193656_JHKF",
-                        }}
-                      >
-                        View Details
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </td>
+    <>
+      <div className="overflow-x-auto">
+        <table className="table text-sm table-pin-rows">
+          <thead>
+            <tr>
+              <th className="font-medium">Product</th>
+              <th className="font-medium">Quantity</th>
+              <th className="font-medium">Unit Weight</th>
+              <th className="font-medium">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {products.map((product, idx) => (
+              <tr key={idx} className="hover:bg-light-grey-clr">
+                <td className="w-full">{product.name}</td>
+                <td className="w-max text-nowrap">
+                  {product.quantity} {product.unit}
+                </td>
+                <td className="w-max text-nowrap">{product.unit}</td>
+                <td className="w-max">
+                  <div className="dropdown dropdown-left dropdown-center">
+                    <div tabIndex={0} role="button">
+                      <button className="btn btn-sm btn-ghost btn-square">
+                        <DotsVerticalIcon />
+                      </button>
+                    </div>
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content bg-base-100 menu rounded-box z-1 w-max p-2 shadow-sm border-[1px] border-base-300"
+                    >
+                      <li>
+                        <button className="btn btn-ghost font-normal w-max" onClick={() => {
+                            setImages(product.images)
+                            handleShowModal("images")
+                          }}
+                        >
+                          View Product Images
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ImageViewerModal 
+          onClose = {() => handleCloseModal("images")} 
+          images = {images}
+          setImages = {setImages}
+        />
+    </>
   );
 }
 
-const StatusBadge = () => {
+const ImageViewerModal = ({
+  onClose,
+  images,
+  setImages
+}: {
+  onClose: () => void;
+  images: Array<string>;
+  setImages: Dispatch<SetStateAction<Array<string>>>
+}) => {
+  
+  const [current, setCurrent] = useState(0)
+
+  const handleClose = () => {
+    if (window.location.hash && window.location.hash.includes("item")) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    setCurrent(0)
+    onClose()
+    setImages([])
+  };
+
   return (
-    <span className="w-3 h-3 block rounded-full bg-light-green-clr border-2 border-dark-green-clr" />
+    <dialog id="imagesModal" className="modal">
+      <div className="modal-box">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-medium text-lg">Product Images</h3>
+          <button
+            className="btn btn-circle btn-xs btn-outline btn-error hover:text-white shadow-none"
+            onClick={handleClose}
+          >
+            <Cross2Icon />
+          </button>
+        </div>
+
+        <div className="carousel gap-4 w-full rounded-lg overflow-hidden">
+          {images.map((img, idx) => (
+            <div id={`item${idx}`} className="carousel-item w-full overflow-hidden h-[400px] skeleton">
+              <img
+                src={img}
+                className="w-full object-cover" />
+            </div>
+          ))}
+        </div>
+        <div className="flex w-full justify-center gap-2 py-2">
+          {images.map((_, idx) => (
+            <a href={`#item${idx}`} className={`btn btn-xs ${idx === current && "bg-dark-green-clr text-white"}`} onClick={() => setCurrent(idx)}>{idx + 1}</a>
+          ))}
+        </div>
+      </div>
+    </dialog>
   );
 };
+

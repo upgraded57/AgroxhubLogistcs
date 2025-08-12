@@ -7,6 +7,7 @@ import {
   BackpackIcon,
   Cross1Icon,
   ExclamationTriangleIcon,
+  SpeakerLoudIcon,
   ExitIcon,
   FileTextIcon,
   HamburgerMenuIcon,
@@ -15,17 +16,20 @@ import {
   SpeakerModerateIcon,
 } from "@radix-ui/react-icons";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { use, useState } from "react";
+import { use, useState, type ReactNode } from "react";
 import { AvatarComp } from "../avatarComp";
+import { useGetNotifications } from "@/api/notification";
 
 export default function AppLayout({
   children,
   title,
   subtitle,
   actions,
+  badge,
 }: {
   children: React.ReactNode;
   title: string;
+  badge?: ReactNode;
   subtitle: string;
   actions?: React.ReactNode;
 }) {
@@ -39,7 +43,7 @@ export default function AppLayout({
 
   return (
     <AdminProvider>
-      <EarlyAccessNotice />
+      {/* <EarlyAccessNotice /> */}
       <div className="main-container w-full bg-white flex items-start space-y-6 overflow-y-hidden">
         {/* Sidebar Large Screen */}
         <AsideComp isLoadingRoute={isLoadingRoute} pathName={pathName} />
@@ -47,13 +51,18 @@ export default function AppLayout({
         {/* Main */}
         <div className="w-full h-full overflow-y-scroll bg-light-grey-clr">
           {/* Topbar - Small Screen */}
-          <MobileNav isLoadingRoute={isLoadingRoute} pathName={pathName} />
-
+          <div className="mb-4">
+            <MobileNav isLoadingRoute={isLoadingRoute} pathName={pathName} />
+            {!pathName.includes("notification") && <NewNotificationNotice />}
+          </div>
           {/* Content */}
           <main className="px-4 lg:p-6">
             <div className="flex flex-col lg:flex-row items-start space-y-4 lg:space-y-0 justify-start lg:items-center lg:justify-between mb-6 max-w-full">
               <div className="space-y-1">
-                <h2 className="font-medium text-lg">{title}</h2>
+                <div className="flex items-center gap-4">
+                  <h2 className="font-medium text-lg">{title}</h2>
+                  {badge}
+                </div>
                 <p className="text-sm font-light">{subtitle}</p>
               </div>
               {actions}
@@ -186,7 +195,7 @@ const MobileNav = ({
   const [navOpen, setNavOpen] = useState(false);
   return (
     <>
-      <div className="w-full bg-white flex justify-between items-center lg:hidden shadow mb-4 h-15 px-4 sticky top-0 z-[20]">
+      <div className="w-full bg-white flex justify-between items-center lg:hidden shadow h-15 px-4 sticky top-0 z-[20]">
         <div className="flex space-x-2 items-center">
           <button
             className="btn btn-square bg-transparent p-2 h-auto w-auto btn-ghost"
@@ -274,6 +283,46 @@ const EarlyAccessNotice = () => {
             </div>
           </div>
         </dialog>
+      </>
+    )
+  );
+};
+
+const NewNotificationNotice = () => {
+  const [showNotifNotice, setShowNotifNotice] = useState(
+    !!sessionStorage.getItem("closeNotifNotice")
+  );
+
+  const { isLoading, data: notifications } = useGetNotifications();
+  return (
+    !isLoading &&
+    !showNotifNotice &&
+    notifications &&
+    notifications.filter((n) => n.unread).length > 0 && (
+      <>
+        <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2">
+          <SpeakerLoudIcon />
+          <p className="text-sm">
+            You have {notifications.filter((n) => n.unread).length} new
+            notifications.
+          </p>
+          <Link
+            to="/notifications"
+            className="text-sm underline cursor-pointer"
+          >
+            View Notifications
+          </Link>
+
+          <button
+            className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
+            onClick={() => {
+              sessionStorage.setItem("closeNotifNotice", "1");
+              setShowNotifNotice(true);
+            }}
+          >
+            <Cross1Icon className="text-base-content" />
+          </button>
+        </div>
       </>
     )
   );

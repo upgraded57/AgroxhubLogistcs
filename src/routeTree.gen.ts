@@ -26,6 +26,7 @@ import { Route as appNotificationsIndexImport } from './routes/(app)/notificatio
 import { Route as appFinanceIndexImport } from './routes/(app)/finance/index'
 import { Route as appDeliverablesIndexImport } from './routes/(app)/deliverables/index'
 import { Route as appOrdersOrderIdImport } from './routes/(app)/orders/$orderId'
+import { Route as appNotificationsIdIndexImport } from './routes/(app)/notifications/$id/index'
 
 // Create/Update Routes
 
@@ -115,6 +116,12 @@ const appDeliverablesIndexRoute = appDeliverablesIndexImport.update({
 const appOrdersOrderIdRoute = appOrdersOrderIdImport.update({
   id: '/orders/$orderId',
   path: '/orders/$orderId',
+  getParentRoute: () => appRouteRoute,
+} as any)
+
+const appNotificationsIdIndexRoute = appNotificationsIdIndexImport.update({
+  id: '/notifications/$id/',
+  path: '/notifications/$id/',
   getParentRoute: () => appRouteRoute,
 } as any)
 
@@ -227,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthVerifyEmailIndexImport
       parentRoute: typeof AuthRouteImport
     }
+    '/(app)/notifications/$id/': {
+      id: '/(app)/notifications/$id/'
+      path: '/notifications/$id'
+      fullPath: '/notifications/$id'
+      preLoaderRoute: typeof appNotificationsIdIndexImport
+      parentRoute: typeof appRouteImport
+    }
   }
 }
 
@@ -240,6 +254,7 @@ interface appRouteRouteChildren {
   appOrdersIndexRoute: typeof appOrdersIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
   appRegionsIndexRoute: typeof appRegionsIndexRoute
+  appNotificationsIdIndexRoute: typeof appNotificationsIdIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
@@ -250,6 +265,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appOrdersIndexRoute: appOrdersIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
   appRegionsIndexRoute: appRegionsIndexRoute,
+  appNotificationsIdIndexRoute: appNotificationsIdIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -291,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
+  '/notifications/$id': typeof appNotificationsIdIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -307,6 +324,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
+  '/notifications/$id': typeof appNotificationsIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -326,6 +344,7 @@ export interface FileRoutesById {
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
   '/auth/verify-email/': typeof AuthVerifyEmailIndexRoute
+  '/(app)/notifications/$id/': typeof appNotificationsIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -345,6 +364,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/verify-email'
+    | '/notifications/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -360,6 +380,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/verify-email'
+    | '/notifications/$id'
   id:
     | '__root__'
     | '/'
@@ -377,6 +398,7 @@ export interface FileRouteTypes {
     | '/auth/login/'
     | '/auth/register/'
     | '/auth/verify-email/'
+    | '/(app)/notifications/$id/'
   fileRoutesById: FileRoutesById
 }
 
@@ -419,7 +441,8 @@ export const routeTree = rootRoute
         "/(app)/notifications/",
         "/(app)/orders/",
         "/(app)/profile/",
-        "/(app)/regions/"
+        "/(app)/regions/",
+        "/(app)/notifications/$id/"
       ]
     },
     "/auth": {
@@ -479,6 +502,10 @@ export const routeTree = rootRoute
     "/auth/verify-email/": {
       "filePath": "auth/verify-email/index.tsx",
       "parent": "/auth"
+    },
+    "/(app)/notifications/$id/": {
+      "filePath": "(app)/notifications/$id/index.tsx",
+      "parent": "/(app)"
     }
   }
 }

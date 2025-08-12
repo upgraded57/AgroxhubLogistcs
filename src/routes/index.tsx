@@ -8,12 +8,14 @@ import {
 import AppLayout from "@/components/layouts/appLayout";
 import SummaryChart from "@/components/charts/summaryChart";
 import EarningsTable from "@/components/tables/earningsTable";
-import OrderTable from "@/components/tables/orderTable";
+import OrdersTable from "@/components/tables/ordersTable";
+import { useGetOrders } from "@/api/order";
 export const Route = createFileRoute("/")({
   component: App,
 });
 
 export function App() {
+  const { isLoading, data: orders } = useGetOrders();
   return (
     <AppLayout title="Overview" subtitle="Your account at a glance">
       <Summary />
@@ -52,12 +54,24 @@ export function App() {
               <p className="text-sm font-light">Returned</p>
             </span>
           </div>
-          <Link to="/orders" className="flex items-center space-x-1">
+          <Link
+            to="/orders"
+            search={{
+              status: undefined,
+            }}
+            className="flex items-center space-x-1"
+          >
             <p className="text-sm underline">See All</p>
             <ArrowRightIcon />
           </Link>
         </div>
-        <OrderTable orders={8} />
+        {isLoading ? (
+          <div className="w-full h-[300px]">
+            <span className="loading loading-spinner" />
+          </div>
+        ) : (
+          orders && <OrdersTable orders={orders} />
+        )}
       </div>
 
       {/* Average Ratings */}
