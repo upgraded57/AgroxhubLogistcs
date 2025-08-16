@@ -65,6 +65,7 @@ interface NotificationList {
     unit: string;
     slug: string;
   };
+  orderGroupId?: string;
   products?: Array<{
     id: string;
     name: string;
