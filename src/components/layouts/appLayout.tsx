@@ -43,7 +43,7 @@ export default function AppLayout({
 
   return (
     <AdminProvider>
-      {/* <EarlyAccessNotice /> */}
+      <EarlyAccessNotice />
       <div className="main-container w-full bg-white flex items-start space-y-6 overflow-y-hidden">
         {/* Sidebar Large Screen */}
         <AsideComp isLoadingRoute={isLoadingRoute} pathName={pathName} />
