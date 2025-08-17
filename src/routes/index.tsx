@@ -10,6 +10,8 @@ import SummaryChart from "@/components/charts/summaryChart";
 import EarningsTable from "@/components/tables/earningsTable";
 import OrdersTable from "@/components/tables/ordersTable";
 import { useGetOrders } from "@/api/order";
+import { useGetSummary } from "@/api/summary";
+import { ImSpinner8 } from "react-icons/im";
 export const Route = createFileRoute("/")({
   component: App,
 });
@@ -102,43 +104,60 @@ export function App() {
 }
 
 const Summary = () => {
+  const { data: summary, isLoading } = useGetSummary();
   const stats = [
     {
       title: "Total Orders",
-      count: "276",
+      count: summary?.total || 0,
+      query: "all",
     },
     {
       title: "In Transit",
-      count: "116",
+      count: summary?.in_transit || 0,
+      query: "in_transit",
     },
     {
       title: "Delivered",
-      count: 80,
+      count: summary?.delivered || 0,
+      query: "delivered",
     },
     {
       title: "Available Balance",
-      count: "N27.6k",
+      count: summary?.balance ? "N" + summary.balance.toLocaleString() : 0,
     },
   ];
+
   return (
     <div className="stats bg-white w-full shadow">
-      {stats.map((item, idx) => (
-        <div className="stat min-w-[200px]" key={idx}>
-          <div className="stat-title">{item.title}</div>
-          <div className="stat-value text-dark-green-clr my-1 pl-2">
-            {item.count}
+      {stats.map((item, idx) => {
+        const query = item.query as OrderQueryTypes["status"];
+        return (
+          <div className="stat min-w-[200px]" key={idx}>
+            <div className="stat-title">{item.title}</div>
+            <div className="stat-value text-dark-green-clr my-1 pl-2">
+              {isLoading ? (
+                <ImSpinner8 className="animate-spin text-xl my-2" />
+              ) : (
+                item.count
+              )}
+            </div>
+            <div className="stat-desc">
+              {!item.title.toLowerCase().includes("balance") && (
+                <Link
+                  to="/orders"
+                  search={{
+                    status: query,
+                  }}
+                  className="flex items-center space-x-1 border-b-[1px] w-max"
+                >
+                  <small>View All</small>
+                  <ArrowRightIcon />
+                </Link>
+              )}
+            </div>
           </div>
-          <div className="stat-desc">
-            <Link
-              to="."
-              className="flex items-center space-x-1 border-b-[1px] w-max"
-            >
-              <small>View All</small>
-              <ArrowRightIcon />
-            </Link>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

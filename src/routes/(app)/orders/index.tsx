@@ -9,7 +9,7 @@ import {
 
 export const Route = createFileRoute("/(app)/orders/")({
   component: RouteComponent,
-  validateSearch: (search: QueryTypes) => {
+  validateSearch: (search: OrderQueryTypes) => {
     return {
       status: typeof search.status === "string" ? search.status : undefined,
     };
@@ -34,14 +34,14 @@ function RouteComponent() {
         <div className="flex items-center space-x-4 mb-4">
           <p className="text-sm">Filter by:</p>
           <select
-            defaultValue="Pick a Status"
+            defaultValue={params.status || "Pick a Status"}
             className="select select-sm w-max"
             onChange={(e) => {
               navigate({
                 to: "/orders",
                 search: {
                   status: e.target.value.length
-                    ? (e.target.value as QueryTypes["status"])
+                    ? (e.target.value as OrderQueryTypes["status"])
                     : undefined,
                 },
               });

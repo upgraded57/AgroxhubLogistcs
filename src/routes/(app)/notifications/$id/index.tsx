@@ -3,6 +3,7 @@ import moment from "moment";
 import { useGetSingleNotification } from "@/api/notification";
 import Pending from "@/components/pending";
 import AppLayout from "@/components/layouts/appLayout";
+import { FaStar } from "react-icons/fa6";
 
 export const Route = createFileRoute("/(app)/notifications/$id/")({
   component: RouteComponent,
@@ -16,7 +17,7 @@ const Breadcrumb = () => {
       case "follow":
         return "New Follower";
       case "productReview":
-        return "Product Review";
+        return "Service Review";
       case "productSave":
         return "Product Save";
       case "orderPlacement":
@@ -107,6 +108,8 @@ function RouteComponent() {
     switch (notification?.type) {
       case "orderPlacement":
         return <OrderPlacementNotification notification={notification} />;
+      case "productReview":
+        return <ProductReviewNotification notification={notification} />;
       case "orderAssignment":
         return <OrderAssignmentNotification notification={notification} />;
       case "outOfStock":
@@ -432,5 +435,64 @@ const OrderPlacementNotification = ({
         </Link>
       </div>
     </>
+  );
+};
+
+const ProductReviewNotification = ({
+  notification,
+}: {
+  notification: NotificationList;
+}) => {
+  const productRatings = (rating: number) => {
+    const positive = Array.from({ length: rating }, (_, index) => index);
+    const empty = Array.from({ length: 5 - rating }, (_, index) => index);
+
+    return { positive, empty };
+  };
+
+  const rating = productRatings(
+    notification?.rating ? parseInt(notification?.rating) : 4
+  );
+  return (
+    <div>
+      <Breadcrumb />
+      <div className="my-6 space-y-8 bg-white p-6 rounded-lg">
+        <p className="text-sm">{notification.summary}</p>
+        <Profile
+          name={notification.user?.name || ""}
+          slug={moment(notification.createdAt).format(
+            "dddd MMM DD, YYYY. hh:mma"
+          )}
+          image={notification.user?.avatar}
+        />
+
+        {/* Rating */}
+        <div className="space-y-1">
+          <p className="text-slate-500 text-sm">Rating</p>
+          <div className="flex gap-2 items-center text-md">
+            {rating.positive.map((_, idx) => (
+              <FaStar key={idx} className="text-orange-400 text-xl" />
+            ))}
+            {rating.empty.map((_, idx) => (
+              <FaStar className="text-gray-300 text-xl" key={idx} />
+            ))}
+          </div>
+        </div>
+
+        {/* Review */}
+        <div className="space-y-1">
+          <p className="text-slate-500 text-sm">Review</p>
+          <p className="pr-0 lg:pr-6 text-sm">{notification?.review}</p>
+        </div>
+
+        {/* <Link
+          to="/product/$slug/reviews"
+          params={{ slug: notification.product?.slug || "" }}
+          className="btn btn-outline border-yellow-clr text-yellow-clr hover:bg-yellow-clr hover:text-white"
+        >
+          View Product Reviews
+        </Link> */}
+      </div>
+    </div>
   );
 };

@@ -79,6 +79,11 @@ interface NotificationList {
     name: string;
     avatar: string;
   };
+  user?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
   follower?: {
     id: string;
     name: string;
@@ -100,6 +105,8 @@ interface NotificationList {
       name: string;
     };
   };
+  rating?: string;
+  review?: string;
   productQuantity?: number;
   pickupDate?: string;
   deliveryDate?: string;
@@ -209,7 +216,7 @@ interface SellerSummary {
   totalEarnings: number;
 }
 
-interface QueryTypes {
+interface OrderQueryTypes {
   status:
     | "all"
     | "pending"
@@ -217,4 +224,13 @@ interface QueryTypes {
     | "delivered"
     | "returned"
     | undefined;
+}
+
+interface Summary {
+  balance: number;
+  delivered: number;
+  in_transit: number;
+  pending: number;
+  rejected: number;
+  total: number;
 }
