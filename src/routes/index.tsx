@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import "../App.css";
 import {
   ArrowRightIcon,
-  PieChartIcon,
   StarFilledIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
@@ -14,7 +13,6 @@ import { useGetOrders } from "@/api/order";
 import { useGetSummary } from "@/api/summary";
 import { ImSpinner8 } from "react-icons/im";
 import { useGetReviews } from "@/api/reviews";
-import Pending from "@/components/pending";
 import Loader from "@/components/loader";
 import moment from "moment";
 export const Route = createFileRoute("/")({
