@@ -25,6 +25,31 @@ import moment from "moment";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
+type ActionTypes =
+  | "info"
+  | "complete"
+  | "reject"
+  | "pickupDate"
+  | "deliveryDate"
+  | "transit"
+  | "buyer";
+
+const getModalType = (type: ActionTypes) => {
+  return type === "info"
+    ? "infoModal"
+    : type === "complete"
+      ? "completeModal"
+      : type === "pickupDate"
+        ? "pickupDateModal"
+        : type === "deliveryDate"
+          ? "deliveryDateModal"
+          : type === "transit"
+            ? "transitModal"
+            : type === "buyer"
+              ? "buyerInfoModal"
+              : "rejectModal";
+};
+
 export const Route = createFileRoute("/(app)/orders/$orderId")({
   component: RouteComponent,
   pendingComponent: Pending,
@@ -33,71 +58,40 @@ export const Route = createFileRoute("/(app)/orders/$orderId")({
 function RouteComponent() {
   const { orderId } = Route.useParams();
   const { isLoading, data: order, isError } = useGetSingleOrder(orderId);
-  const handleShowModal = (
-    type:
-      | "info"
-      | "complete"
-      | "reject"
-      | "pickupDate"
-      | "deliveryDate"
-      | "transit"
-      | "buyer"
-  ) => {
-    const modalId =
-      type === "info"
-        ? "infoModal"
-        : type === "complete"
-          ? "completeModal"
-          : type === "pickupDate"
-            ? "pickupDateModal"
-            : type === "deliveryDate"
-              ? "deliveryDateModal"
-              : type === "transit"
-                ? "transitModal"
-                : type === "buyer"
-                  ? "buyerInfoModal"
-                  : "rejectModal";
+  const handleShowModal = (type: ActionTypes) => {
+    const modalId = getModalType(type);
+
     const modal = document.getElementById(modalId) as HTMLDialogElement;
     modal.showModal();
   };
 
-  const handleCloseModal = (
-    type:
-      | "info"
-      | "complete"
-      | "reject"
-      | "pickupDate"
-      | "deliveryDate"
-      | "transit"
-      | "buyer"
-  ) => {
-    const modalId =
-      type === "info"
-        ? "infoModal"
-        : type === "complete"
-          ? "completeModal"
-          : type === "pickupDate"
-            ? "pickupDateModal"
-            : type === "deliveryDate"
-              ? "deliveryDateModal"
-              : type === "transit"
-                ? "transitModal"
-                : type === "buyer"
-                  ? "buyerInfoModal"
-                  : "rejectModal";
+  const handleCloseModal = (type: ActionTypes) => {
+    const modalId = getModalType(type);
     const modal = document.getElementById(modalId) as HTMLDialogElement;
     modal.close();
   };
 
   if (isLoading)
     return (
-      <div className="w-full">
-        <span className="loading loading-spinner" />
-      </div>
+      <AppLayout
+        title="Order Details"
+        subtitle="Manage and complete this order"
+      >
+        <div className="w-full">
+          <span className="loading loading-spinner" />
+        </div>
+      </AppLayout>
     );
 
   if (isError || !order) {
-    return <p>Order not found</p>;
+    return (
+      <AppLayout
+        title="Order Details"
+        subtitle="Manage and complete this order"
+      >
+        <p>Order not found</p>;
+      </AppLayout>
+    );
   }
 
   return (
@@ -106,61 +100,7 @@ function RouteComponent() {
       badge={<StatusBadge status={order?.status} />}
       subtitle="Manage and complete this order"
       actions={
-        <div className="dropdown lg:dropdown-end">
-          <div tabIndex={0} role="button">
-            <button className="btn font-normal bg-white rounded-lg">
-              <CaretDownIcon />
-              Delivery Actions
-            </button>
-          </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content bg-base-100 menu rounded-box z-1 w-max p-2 shadow-sm border-[1px] border-base-300"
-          >
-            {order?.logisticsNote && (
-              <li>
-                <button
-                  className="btn btn-ghost font-normal"
-                  onClick={() => handleShowModal("info")}
-                >
-                  <InfoCircledIcon />
-                  View Note from Buyer
-                </button>
-              </li>
-            )}
-            <li>
-              <button
-                className="btn btn-ghost font-normal text-orange-clr border-0 justify-start hover:bg-orange-clr hover:text-white disabled:text-slate-400"
-                onClick={() => handleShowModal("transit")}
-                disabled={order.status !== "pending"}
-              >
-                <CheckIcon />
-                Transit Order
-              </button>
-            </li>
-            <li>
-              <button
-                className="btn btn-ghost font-normal text-dark-green-clr border-0 justify-start hover:bg-dark-green-clr hover:text-white disabled:text-slate-400"
-                onClick={() => handleShowModal("complete")}
-                disabled={order.status !== "in_transit"}
-              >
-                <CheckIcon />
-                Complete Delivery
-              </button>
-            </li>
-
-            <li>
-              <button
-                className="btn btn-ghost font-normal text-red-clr border-0 justify-start hover:bg-red-clr hover:text-white disabled:text-slate-400"
-                onClick={() => handleShowModal("reject")}
-                disabled={order.status !== "in_transit"}
-              >
-                <Cross2Icon />
-                Return Products
-              </button>
-            </li>
-          </ul>
-        </div>
+        <DeliveryActions order={order} handleShowModal={handleShowModal} />
       }
     >
       {/* Pickup and delivery address */}
@@ -281,6 +221,72 @@ function RouteComponent() {
     </AppLayout>
   );
 }
+
+const DeliveryActions = ({
+  order,
+  handleShowModal,
+}: {
+  order: Order;
+  handleShowModal: (type: ActionTypes) => void;
+}) => {
+  return (
+    <div className="dropdown lg:dropdown-end">
+      <div tabIndex={0} role="button">
+        <button className="btn font-normal bg-white rounded-lg">
+          <CaretDownIcon />
+          Delivery Actions
+        </button>
+      </div>
+      <ul
+        tabIndex={0}
+        className="dropdown-content bg-base-100 menu rounded-box z-1 w-max p-2 shadow-sm border-[1px] border-base-300"
+      >
+        {order?.logisticsNote && (
+          <li>
+            <button
+              className="btn btn-ghost font-normal"
+              onClick={() => handleShowModal("info")}
+            >
+              <InfoCircledIcon />
+              View Note from Buyer
+            </button>
+          </li>
+        )}
+        <li>
+          <button
+            className="btn btn-ghost font-normal text-orange-clr border-0 justify-start hover:bg-orange-clr hover:text-white disabled:text-slate-400"
+            onClick={() => handleShowModal("transit")}
+            disabled={order.status !== "pending"}
+          >
+            <CheckIcon />
+            Transit Order
+          </button>
+        </li>
+        <li>
+          <button
+            className="btn btn-ghost font-normal text-dark-green-clr border-0 justify-start hover:bg-dark-green-clr hover:text-white disabled:text-slate-400"
+            onClick={() => handleShowModal("complete")}
+            disabled={order.status !== "in_transit"}
+          >
+            <CheckIcon />
+            Complete Delivery
+          </button>
+        </li>
+
+        <li>
+          <button
+            className="btn btn-ghost font-normal text-red-clr border-0 justify-start hover:bg-red-clr hover:text-white disabled:text-slate-400"
+            onClick={() => handleShowModal("reject")}
+            disabled={order.status !== "in_transit"}
+          >
+            <Cross2Icon />
+            Return Products
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 const InfoModal = ({
   onClose,
