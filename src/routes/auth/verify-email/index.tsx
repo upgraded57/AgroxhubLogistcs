@@ -10,7 +10,7 @@ import failAnimation from "@/assets/json/AnimationFail.json";
 import loadingAnimation from "@/assets/json/AnimationLoading.json";
 import { useEffect } from "react";
 import { useActivateAccount, useResendActivationLink } from "@/api/auth";
-import ButtonPending from "@/components/buttonPending";
+import ButtonPending from "@/components/button-pending";
 
 export const Route = createFileRoute("/auth/verify-email/")({
   component: RouteComponent,

@@ -234,3 +234,15 @@ interface Summary {
   rejected: number;
   total: number;
 }
+
+interface Review {
+  review: string;
+  rating: string;
+  createdAt: string;
+  average: number;
+  user: {
+    id: string;
+    avatar: string;
+    name: string;
+  };
+}

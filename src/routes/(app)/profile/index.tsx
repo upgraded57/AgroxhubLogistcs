@@ -3,8 +3,8 @@ import {
   useUpdateProfile,
   useUpdateVisibilityStatus,
 } from "@/api/profile";
-import ButtonPending from "@/components/buttonPending";
-import AppLayout from "@/components/layouts/appLayout";
+import ButtonPending from "@/components/button-pending";
+import AppLayout from "@/components/layouts/app-layout";
 import { AdminContext } from "@/context/adminProvider";
 import useRegion from "@/hooks/useRegion";
 import { Cross2Icon, InfoCircledIcon } from "@radix-ui/react-icons";

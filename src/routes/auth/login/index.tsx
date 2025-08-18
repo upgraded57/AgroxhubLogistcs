@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useLogin } from "@/api/auth";
-import ButtonPending from "@/components/buttonPending";
+import ButtonPending from "@/components/button-pending";
 
 export const Route = createFileRoute("/auth/login/")({
   component: RouteComponent,

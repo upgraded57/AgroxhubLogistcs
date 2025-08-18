@@ -2,7 +2,7 @@ import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import moment from "moment";
 import { useGetSingleNotification } from "@/api/notification";
 import Pending from "@/components/pending";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import { FaStar } from "react-icons/fa6";
 
 export const Route = createFileRoute("/(app)/notifications/$id/")({

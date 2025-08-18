@@ -1,4 +1,4 @@
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import {
   useUpdateServiceRegions,
 } from "@/api/region";
 import Pending from "@/components/pending";
-import ButtonPending from "@/components/buttonPending";
+import ButtonPending from "@/components/button-pending";
 
 export const Route = createFileRoute("/(app)/regions/")({
   component: RouteComponent,

@@ -1,5 +1,5 @@
 import EarningsChart from "@/components/charts/earningsChart";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import { ReaderIcon } from "@radix-ui/react-icons";
 import { createFileRoute } from "@tanstack/react-router";
 

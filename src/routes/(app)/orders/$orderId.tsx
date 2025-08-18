@@ -4,8 +4,8 @@ import {
   useTransitOrder,
   useUpdateOrderDates,
 } from "@/api/order";
-import ButtonPending from "@/components/buttonPending";
-import AppLayout from "@/components/layouts/appLayout";
+import ButtonPending from "@/components/button-pending";
+import AppLayout from "@/components/layouts/app-layout";
 import Pending from "@/components/pending";
 import { StatusBadge } from "@/components/status-badge";
 import OrderTable from "@/components/tables/orderTable";

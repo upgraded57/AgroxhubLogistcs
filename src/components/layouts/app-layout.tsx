@@ -6,7 +6,7 @@ import {
   AvatarIcon,
   BackpackIcon,
   Cross1Icon,
-  ExclamationTriangleIcon,
+  // ExclamationTriangleIcon,
   SpeakerLoudIcon,
   ExitIcon,
   FileTextIcon,
@@ -17,7 +17,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { use, useState, type ReactNode } from "react";
-import { AvatarComp } from "../avatarComp";
+import { AvatarComp } from "../avatar-comp";
 import { useGetNotifications } from "@/api/notification";
 
 export default function AppLayout({
@@ -43,7 +43,6 @@ export default function AppLayout({
 
   return (
     <AdminProvider>
-      <EarlyAccessNotice />
       <div className="main-container w-full bg-white flex items-start space-y-6 overflow-y-hidden">
         {/* Sidebar Large Screen */}
         <AsideComp isLoadingRoute={isLoadingRoute} pathName={pathName} />
@@ -53,6 +52,7 @@ export default function AppLayout({
           {/* Topbar - Small Screen */}
           <div className="mb-4">
             <MobileNav isLoadingRoute={isLoadingRoute} pathName={pathName} />
+            {/* <EarlyAccessNotice /> */}
             {!pathName.includes("notification") && <NewNotificationNotice />}
           </div>
           {/* Content */}
@@ -67,6 +67,7 @@ export default function AppLayout({
               </div>
               {actions}
             </div>
+
             <ProtectedRoute>{children}</ProtectedRoute>
           </main>
         </div>
@@ -82,6 +83,7 @@ const NavLinks = ({
   isLoadingRoute: boolean;
   pathName: string;
 }) => {
+  const { data: notifications } = useGetNotifications();
   const links = [
     {
       title: "Dashboard",
@@ -145,6 +147,16 @@ const NavLinks = ({
             >
               {item.title}
             </p>
+            {item.href.includes("notification") &&
+            pathName !== "/notifications" &&
+            notifications &&
+            notifications.filter((n) => n.unread).length ? (
+              <span className="w-5 h-5 aspect-square bg-orange-clr rounded-full flex items-center justify-center text-xs text-white font-semibold">
+                {notifications.filter((n) => n.unread).length}
+              </span>
+            ) : (
+              ""
+            )}
             {isLoadingRoute && pathName === item.href && (
               <span className="loading loading-spinner loading-sm text-grey-clr" />
             )}
@@ -222,71 +234,71 @@ const MobileNav = ({
   );
 };
 
-const EarlyAccessNotice = () => {
-  const [showNotice, setShowNotice] = useState(
-    !!sessionStorage.getItem("closeNotice")
-  );
-  return (
-    !showNotice && (
-      <>
-        <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2">
-          <ExclamationTriangleIcon />
-          <p className="text-sm">Early Access.</p>
-          <p
-            className="text-sm underline cursor-pointer"
-            onClick={() =>
-              (
-                document.getElementById("earlyAccessModal") as HTMLDialogElement
-              ).showModal()
-            }
-          >
-            Learn More
-          </p>
+// const EarlyAccessNotice = () => {
+//   const [showNotice, setShowNotice] = useState(
+//     !!sessionStorage.getItem("closeNotice")
+//   );
+//   return (
+//     !showNotice && (
+//       <>
+//         <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2 border-b border-b-black">
+//           <ExclamationTriangleIcon />
+//           <p className="text-sm">Early Access.</p>
+//           <p
+//             className="text-sm underline cursor-pointer"
+//             onClick={() =>
+//               (
+//                 document.getElementById("earlyAccessModal") as HTMLDialogElement
+//               ).showModal()
+//             }
+//           >
+//             Learn More
+//           </p>
 
-          <button
-            className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
-            onClick={() => {
-              sessionStorage.setItem("closeNotice", "1");
-              setShowNotice(true);
-            }}
-          >
-            <Cross1Icon className="text-base-content" />
-          </button>
-        </div>
+//           <button
+//             className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
+//             onClick={() => {
+//               sessionStorage.setItem("closeNotice", "1");
+//               setShowNotice(true);
+//             }}
+//           >
+//             <Cross1Icon className="text-base-content" />
+//           </button>
+//         </div>
 
-        {/* Early access dialog */}
-        <dialog id="earlyAccessModal" className="modal">
-          <div className="modal-box">
-            <h3 className="font-semibold text-lg">Early Access!</h3>
-            <p className="py-4 text-sm">
-              This is the early access version of the app. Some pages may
-              contain placeholder texts with dummy data and some functionalities
-              may not work. Features will continue to roll out, so check out
-              often!
-            </p>
-            <p className="py-4 text-sm">
-              We welcome suggestions! Reach out to us at{" "}
-              <a
-                href="mailto:developer@agroxhub.com"
-                target="_blank"
-                className="font-medium underline"
-              >
-                developer@agroxhub.com
-              </a>{" "}
-              to submit a suggestion
-            </p>
-            <div className="modal-action">
-              <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
-                <button className="btn">Close</button>
-              </form>
-            </div>
-          </div>
-        </dialog>
-      </>
-    )
-  );
-};
+//         {/* Early access dialog */}
+//         <dialog id="earlyAccessModal" className="modal">
+//           <div className="modal-box">
+//             <h3 className="font-semibold text-lg">Early Access!</h3>
+//             <p className="py-4 text-sm">
+//               This is the early access version of the app. Some pages may
+//               contain placeholder texts with dummy data and some functionalities
+//               may not work. Features will continue to roll out, so check out
+//               often!
+//             </p>
+//             <p className="py-4 text-sm">
+//               We welcome suggestions! Reach out to us at{" "}
+//               <a
+//                 href="mailto:developer@agroxhub.com"
+//                 target="_blank"
+//                 className="font-medium underline"
+//               >
+//                 developer@agroxhub.com
+//               </a>{" "}
+//               to submit a suggestion
+//             </p>
+//             <div className="modal-action">
+//               <form method="dialog">
+//                 {/* if there is a button in form, it will close the modal */}
+//                 <button className="btn">Close</button>
+//               </form>
+//             </div>
+//           </div>
+//         </dialog>
+//       </>
+//     )
+//   );
+// };
 
 const NewNotificationNotice = () => {
   const [showNotifNotice, setShowNotifNotice] = useState(
@@ -300,7 +312,7 @@ const NewNotificationNotice = () => {
     notifications &&
     notifications.filter((n) => n.unread).length > 0 && (
       <>
-        <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2">
+        <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2 relative">
           <SpeakerLoudIcon />
           <p className="text-sm">
             You have {notifications.filter((n) => n.unread).length} new

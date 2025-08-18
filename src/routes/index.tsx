@@ -2,16 +2,21 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import "../App.css";
 import {
   ArrowRightIcon,
+  PieChartIcon,
   StarFilledIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import SummaryChart from "@/components/charts/summaryChart";
 import EarningsTable from "@/components/tables/earningsTable";
 import OrdersTable from "@/components/tables/ordersTable";
 import { useGetOrders } from "@/api/order";
 import { useGetSummary } from "@/api/summary";
 import { ImSpinner8 } from "react-icons/im";
+import { useGetReviews } from "@/api/reviews";
+import Pending from "@/components/pending";
+import Loader from "@/components/loader";
+import moment from "moment";
 export const Route = createFileRoute("/")({
   component: App,
 });
@@ -77,28 +82,7 @@ export function App() {
       </div>
 
       {/* Average Ratings */}
-      <div className="mt-6 rounded-lg shadow p-4 bg-white">
-        <div className="flex items center justify-between mb-4">
-          <p className="text-sm font-medium">Recent Orders</p>
-          <div className="flex items-center space-x-4">
-            <p className="text-sm">Average Rating:</p>
-            <span className="flex items-center space-x-2">
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarIcon className="text-yellow-clr" />
-            </span>
-          </div>
-        </div>
-        <ul className="list">
-          {[1, 1, 2, 2, 2].map((_, idx) => (
-            <li className="list-row" key={idx}>
-              <RatingComp />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Reviews />
     </AppLayout>
   );
 }
@@ -162,39 +146,81 @@ const Summary = () => {
   );
 };
 
-const RatingComp = () => {
+const Reviews = () => {
+  const { isLoading, data: reviews } = useGetReviews();
+  if (isLoading) {
+    return (
+      <div className="flex w-full h-[300px] bg-white rounded-lg shadow items-center justify-center mt-6">
+        <Loader />
+      </div>
+    );
+  }
   return (
-    <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-20">
-      <div className="flex items-center space-x-3">
-        <div className="avatar">
-          <div className="w-12 rounded-full">
-            <img
-              src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-              alt="Avatar Tailwind CSS Component"
-            />
+    <div className="mt-6 rounded-lg shadow p-4 bg-white">
+      <div className="flex items center justify-between mb-4 ">
+        <div className="flex flex-col space-y-2">
+          <p className="text-sm font-medium">Recent Orders</p>
+          <div className="flex items-center space-x-4">
+            <p className="text-sm">Average Rating:</p>
+            <span className="flex items-center space-x-2">
+              <StarFilledIcon className="text-yellow-clr" />
+              <StarFilledIcon className="text-yellow-clr" />
+              <StarFilledIcon className="text-yellow-clr" />
+              <StarFilledIcon className="text-yellow-clr" />
+              <StarIcon className="text-yellow-clr" />
+            </span>
           </div>
         </div>
-        <div className="flex flex-col min-w-max">
-          <p className="text-sm">John Doe</p>
-          <small>8 Days Ago</small>
-        </div>
+        <Link
+          to="/orders"
+          search={{
+            status: undefined,
+          }}
+          className="flex items-center space-x-1"
+        >
+          <p className="text-sm underline">See All</p>
+          <ArrowRightIcon />
+        </Link>
       </div>
+      <ul className="list space-y-4">
+        {reviews && reviews.length ? (
+          reviews.map((review, idx) => (
+            <li key={idx}>
+              <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-20">
+                <div className="flex items-center space-x-3">
+                  <div className="avatar">
+                    <div className="w-12 rounded-full">
+                      <img
+                        src={review.user.avatar || ""}
+                        alt={review.user.name}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col min-w-max">
+                    <p className="text-sm">{review.user.name}</p>
+                    <small>{moment(review.createdAt).fromNow()}</small>
+                  </div>
+                </div>
 
-      <div className="space-y-2">
-        <p className="text-sm">
-          At Agroxhub, we believe in making agricultural transactions simple,
-          efficient, and rewarding for both farmers and buyers. Our platform is
-          designed with you in mind, providing a seamless experience that
-          connects quality products with eager buyers.
-        </p>
-        <span className="flex items-center space-x-2">
-          <StarFilledIcon className="text-yellow-clr" />
-          <StarFilledIcon className="text-yellow-clr" />
-          <StarFilledIcon className="text-yellow-clr" />
-          <StarFilledIcon className="text-yellow-clr" />
-          <StarIcon className="text-yellow-clr" />
-        </span>
-      </div>
+                <div className="space-y-2">
+                  <p className="text-sm">{review.review}</p>
+                  <span className="flex items-center space-x-2">
+                    <StarFilledIcon className="text-yellow-clr" />
+                    <StarFilledIcon className="text-yellow-clr" />
+                    <StarFilledIcon className="text-yellow-clr" />
+                    <StarFilledIcon className="text-yellow-clr" />
+                    <StarIcon className="text-yellow-clr" />
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))
+        ) : (
+          <div className="w-full h-[200px] grid place-content-center">
+            <p>You have no review yet!</p>
+          </div>
+        )}
+      </ul>
     </div>
   );
 };

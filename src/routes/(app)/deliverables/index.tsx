@@ -3,7 +3,7 @@ import {
   useGetDeliverables,
   useUpdateDeliverables,
 } from "@/api/deliverable";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import Pending from "@/components/pending";
 import { useQueryClient } from "@tanstack/react-query";
 

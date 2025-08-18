@@ -1,5 +1,5 @@
 import { useGetOrders } from "@/api/order";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import OrdersTable from "@/components/tables/ordersTable";
 import {
   createFileRoute,

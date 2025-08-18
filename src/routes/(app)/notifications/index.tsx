@@ -1,5 +1,5 @@
 import { useGetNotifications } from "@/api/notification";
-import AppLayout from "@/components/layouts/appLayout";
+import AppLayout from "@/components/layouts/app-layout";
 import { GrUserNew } from "react-icons/gr";
 import {
   FaCalendarCheck,
@@ -14,6 +14,7 @@ import { HiClipboardDocumentCheck } from "react-icons/hi2";
 import { FaCheckCircle } from "react-icons/fa";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import moment from "moment";
+import { useState } from "react";
 
 export const Route = createFileRoute("/(app)/notifications/")({
   component: RouteComponent,
@@ -21,8 +22,22 @@ export const Route = createFileRoute("/(app)/notifications/")({
 
 function RouteComponent() {
   const { isLoading, data: notifications } = useGetNotifications();
+  const [filter, setFilter] = useState("all");
   return (
-    <AppLayout title="Notifications" subtitle="Manage your notifications">
+    <AppLayout
+      title="Notifications"
+      subtitle="Manage your notifications"
+      actions={
+        <select
+          className="select w-max"
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">All</option>
+          <option value="read">Read</option>
+          <option value="unread">Unread</option>
+        </select>
+      }
+    >
       <ul className="list bg-white rounded-lg">
         {isLoading
           ? [1, 1, 1, 1].map((_, i) => (
@@ -35,9 +50,21 @@ function RouteComponent() {
                 <div className="w-16 h-6 rounded-sm skeleton" />
               </li>
             ))
-          : notifications?.map((item, idx) => (
-              <NotificationItem key={idx} notification={item} />
-            ))}
+          : notifications
+              ?.filter((n) => {
+                if (filter === "read") {
+                  return !n.unread;
+                }
+
+                if (filter === "unread") {
+                  return n.unread;
+                }
+
+                return n;
+              })
+              ?.map((item, idx) => (
+                <NotificationItem key={idx} notification={item} />
+              ))}
       </ul>
     </AppLayout>
   );
