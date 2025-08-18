@@ -77,9 +77,7 @@ function RouteComponent() {
         title="Order Details"
         subtitle="Manage and complete this order"
       >
-        <div className="w-full">
-          <span className="loading loading-spinner" />
-        </div>
+        <Pending />
       </AppLayout>
     );
 
@@ -162,7 +160,7 @@ function RouteComponent() {
             <button
               className="btn btn-sm font-normal"
               onClick={() => handleShowModal("pickupDate")}
-              // disabled={order.pickupDate ? true : false}
+              disabled={order.pickupDate ? true : false}
             >
               Set pickup date
             </button>
@@ -179,7 +177,7 @@ function RouteComponent() {
             <button
               className="btn btn-sm font-normal"
               onClick={() => handleShowModal("deliveryDate")}
-              // disabled={order.deliveryDate ? true : false}
+              disabled={order.deliveryDate ? true : false}
             >
               Set delivery date
             </button>

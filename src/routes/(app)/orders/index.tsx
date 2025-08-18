@@ -1,6 +1,6 @@
 import { useGetOrders } from "@/api/order";
 import AppLayout from "@/components/layouts/app-layout";
-import Pending from "@/components/pending";
+import Loader from "@/components/loader";
 import OrdersTable from "@/components/tables/ordersTable";
 import {
   createFileRoute,
@@ -57,9 +57,13 @@ function RouteComponent() {
         </div>
 
         {isLoading || isFetching ? (
-          <Pending />
+          <div className="w-full h-[300px] flex items-center justify-center">
+            <Loader />
+          </div>
         ) : isError || !orders || orders.length === 0 ? (
-          "No order found!"
+          <div className="w-full h-[300px] flex items-center justify-center">
+            <p>No order found!</p>
+          </div>
         ) : (
           <>
             <OrdersTable orders={orders} />
