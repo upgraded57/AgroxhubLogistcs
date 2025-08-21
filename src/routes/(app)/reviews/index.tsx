@@ -2,9 +2,7 @@ import { useGetReviews } from "@/api/reviews";
 import AppLayout from "@/components/layouts/app-layout";
 import ProductRatings from "@/components/product-rating";
 import { createFileRoute } from "@tanstack/react-router";
-import Lottie from "lottie-react";
 import moment from "moment";
-import AnimationNoFile from "@/assets/json/AnimationNoFile.json";
 import EmptyState from "@/components/empty-state";
 
 export const Route = createFileRoute("/(app)/reviews/")({
