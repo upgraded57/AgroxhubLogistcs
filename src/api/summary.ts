@@ -12,3 +12,29 @@ export const useGetSummary = () => {
     queryFn: getSummary,
   });
 };
+
+export const useGetOrdersSummary = () => {
+  const getOrdersSummary = async () => {
+    const res = await axiosInstance.get("summary/orders", { showToast: false });
+    return res.data.summary as OrdersSummary[];
+  };
+
+  return useQuery({
+    queryKey: ["Summary", "Orders"],
+    queryFn: getOrdersSummary,
+  });
+};
+
+export const useGetEarningsSummary = () => {
+  const getEarningsSummary = async () => {
+    const res = await axiosInstance.get("summary/earnings", {
+      showToast: false,
+    });
+    return res.data.summary as OrdersSummary[];
+  };
+
+  return useQuery({
+    queryKey: ["Summary", "Earnings"],
+    queryFn: getEarningsSummary,
+  });
+};

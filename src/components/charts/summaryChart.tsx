@@ -1,3 +1,4 @@
+import { useGetOrdersSummary } from "@/api/summary";
 import {
   Bar,
   BarChart,
@@ -7,54 +8,30 @@ import {
   Tooltip,
   XAxis,
 } from "recharts";
+import Loader from "../loader";
 
 export default function SummaryChart() {
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-    },
-  ];
-  return (
+  const { isLoading, data: summary } = useGetOrdersSummary();
+
+  const data = summary?.map((s) => ({
+    name: s.month,
+    Total: s.total,
+    Delivered: s.delivered,
+  }));
+
+  return isLoading ? (
+    <div className="h-[400px] w-full grid place-content-center">
+      <Loader />
+    </div>
+  ) : (
     <ResponsiveContainer height={400}>
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="name" />
         <Tooltip />
         <Legend />
-        <Bar dataKey="pv" fill="#8884d8" />
-        <Bar dataKey="uv" fill="#82ca9d" />
+        <Bar dataKey="Total" fill="#a5a5a5" />
+        <Bar dataKey="Delivered" fill="#22955C" />
       </BarChart>
     </ResponsiveContainer>
   );

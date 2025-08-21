@@ -1,10 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import moment from "moment";
 import { StatusBadge } from "../status-badge";
+import EmptyState from "../empty-state";
 
 export default function OrdersTable({ orders }: { orders: Order[] }) {
   const navigate = useNavigate();
-  return (
+  return !orders.length ? (
+    <EmptyState />
+  ) : (
     <div className="overflow-x-auto">
       <table className="table text-sm">
         <thead>

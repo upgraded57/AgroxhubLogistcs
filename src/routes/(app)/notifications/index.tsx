@@ -15,6 +15,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import moment from "moment";
 import { useState } from "react";
+import EmptyState from "@/components/empty-state";
 
 export const Route = createFileRoute("/(app)/notifications/")({
   component: RouteComponent,
@@ -39,32 +40,36 @@ function RouteComponent() {
       }
     >
       <ul className="list bg-white rounded-lg">
-        {isLoading
-          ? [1, 1, 1, 1].map((_, i) => (
-              <li className="list-row" key={i}>
-                <div className="w-8 h-8 skeleton" />
-                <div className="space-y-2">
-                  <div className="w-[400px] h-5 skeleton rounded-sm" />
-                  <div className="w-[200px] h-3 skeleton rounded-sm" />
-                </div>
-                <div className="w-16 h-6 rounded-sm skeleton" />
-              </li>
+        {isLoading ? (
+          [1, 1, 1, 1].map((_, i) => (
+            <div className="flex gap-4 p-4 overflow-x-hidden" key={i}>
+              <div className="w-8 h-8 aspect-square skeleton" />
+              <div className="space-y-2">
+                <div className="w-[300px] md:w-[400px] h-5 skeleton rounded-sm" />
+                <div className="w-[200px] h-3 skeleton rounded-sm" />
+                <div className="w-[280px] h-3 skeleton rounded-sm" />
+              </div>
+            </div>
+          ))
+        ) : notifications && notifications.length ? (
+          notifications
+            ?.filter((n) => {
+              if (filter === "read") {
+                return !n.unread;
+              }
+
+              if (filter === "unread") {
+                return n.unread;
+              }
+
+              return n;
+            })
+            ?.map((item, idx) => (
+              <NotificationItem key={idx} notification={item} />
             ))
-          : notifications
-              ?.filter((n) => {
-                if (filter === "read") {
-                  return !n.unread;
-                }
-
-                if (filter === "unread") {
-                  return n.unread;
-                }
-
-                return n;
-              })
-              ?.map((item, idx) => (
-                <NotificationItem key={idx} notification={item} />
-              ))}
+        ) : (
+          <EmptyState />
+        )}
       </ul>
     </AppLayout>
   );
@@ -145,7 +150,7 @@ const NotificationItem = ({
           <p className="uppercase font-medium">{notification.subject}</p>
           <p>{notification.summary}</p>
           <p className="text-xs font-light text-slate-500">
-            {moment(notification.createdAt).format("MMM D, YYYY. HH:MMa")}
+            {moment(notification.createdAt).format("MMM D, YYYY. hh:mma")}
           </p>
         </div>
       </div>

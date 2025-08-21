@@ -235,7 +235,20 @@ interface Summary {
   total: number;
 }
 
-interface Review {
+interface OrdersSummary {
+  month: string;
+  year: string;
+  total: number;
+  delivered: number;
+}
+
+interface PaymentSummary {
+  month: string;
+  year: string;
+  total: number;
+}
+
+interface UserReview {
   review: string;
   rating: string;
   createdAt: string;

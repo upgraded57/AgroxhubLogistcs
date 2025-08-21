@@ -19,6 +19,7 @@ import { Route as AuthVerifyEmailIndexImport } from './routes/auth/verify-email/
 import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as AuthCheckEmailIndexImport } from './routes/auth/check-email/index'
+import { Route as appReviewsIndexImport } from './routes/(app)/reviews/index'
 import { Route as appRegionsIndexImport } from './routes/(app)/regions/index'
 import { Route as appProfileIndexImport } from './routes/(app)/profile/index'
 import { Route as appOrdersIndexImport } from './routes/(app)/orders/index'
@@ -75,6 +76,12 @@ const AuthCheckEmailIndexRoute = AuthCheckEmailIndexImport.update({
   id: '/check-email/',
   path: '/check-email/',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const appReviewsIndexRoute = appReviewsIndexImport.update({
+  id: '/reviews/',
+  path: '/reviews/',
+  getParentRoute: () => appRouteRoute,
 } as any)
 
 const appRegionsIndexRoute = appRegionsIndexImport.update({
@@ -206,6 +213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRegionsIndexImport
       parentRoute: typeof appRouteImport
     }
+    '/(app)/reviews/': {
+      id: '/(app)/reviews/'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof appReviewsIndexImport
+      parentRoute: typeof appRouteImport
+    }
     '/auth/check-email/': {
       id: '/auth/check-email/'
       path: '/check-email'
@@ -254,6 +268,7 @@ interface appRouteRouteChildren {
   appOrdersIndexRoute: typeof appOrdersIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
   appRegionsIndexRoute: typeof appRegionsIndexRoute
+  appReviewsIndexRoute: typeof appReviewsIndexRoute
   appNotificationsIdIndexRoute: typeof appNotificationsIdIndexRoute
 }
 
@@ -265,6 +280,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appOrdersIndexRoute: appOrdersIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
   appRegionsIndexRoute: appRegionsIndexRoute,
+  appReviewsIndexRoute: appReviewsIndexRoute,
   appNotificationsIdIndexRoute: appNotificationsIdIndexRoute,
 }
 
@@ -303,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
+  '/reviews': typeof appReviewsIndexRoute
   '/auth/check-email': typeof AuthCheckEmailIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
@@ -320,6 +337,7 @@ export interface FileRoutesByTo {
   '/orders': typeof appOrdersIndexRoute
   '/profile': typeof appProfileIndexRoute
   '/regions': typeof appRegionsIndexRoute
+  '/reviews': typeof appReviewsIndexRoute
   '/auth/check-email': typeof AuthCheckEmailIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
@@ -340,6 +358,7 @@ export interface FileRoutesById {
   '/(app)/orders/': typeof appOrdersIndexRoute
   '/(app)/profile/': typeof appProfileIndexRoute
   '/(app)/regions/': typeof appRegionsIndexRoute
+  '/(app)/reviews/': typeof appReviewsIndexRoute
   '/auth/check-email/': typeof AuthCheckEmailIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
@@ -360,6 +379,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/profile'
     | '/regions'
+    | '/reviews'
     | '/auth/check-email'
     | '/auth/login'
     | '/auth/register'
@@ -376,6 +396,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/profile'
     | '/regions'
+    | '/reviews'
     | '/auth/check-email'
     | '/auth/login'
     | '/auth/register'
@@ -394,6 +415,7 @@ export interface FileRouteTypes {
     | '/(app)/orders/'
     | '/(app)/profile/'
     | '/(app)/regions/'
+    | '/(app)/reviews/'
     | '/auth/check-email/'
     | '/auth/login/'
     | '/auth/register/'
@@ -442,6 +464,7 @@ export const routeTree = rootRoute
         "/(app)/orders/",
         "/(app)/profile/",
         "/(app)/regions/",
+        "/(app)/reviews/",
         "/(app)/notifications/$id/"
       ]
     },
@@ -485,6 +508,10 @@ export const routeTree = rootRoute
     },
     "/(app)/regions/": {
       "filePath": "(app)/regions/index.tsx",
+      "parent": "/(app)"
+    },
+    "/(app)/reviews/": {
+      "filePath": "(app)/reviews/index.tsx",
       "parent": "/(app)"
     },
     "/auth/check-email/": {

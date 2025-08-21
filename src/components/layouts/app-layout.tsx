@@ -178,9 +178,12 @@ const AsideComp = ({
   return (
     <aside className="hidden min-w-[300px] max-w-[300px] h-full shadow border-r-[1px] border-r-light-grey-clr lg:flex flex-col justify-between">
       <div>
-        <div className="h-[70px] w-full flex items-center justify-center">
+        <Link
+          to="/"
+          className="h-[70px] w-max mx-auto flex items-center justify-center"
+        >
           <img src={IMAGES.logo} alt="Agroxhub" className="w-[148px]" />
-        </div>
+        </Link>
         <NavLinks isLoadingRoute={isLoadingRoute} pathName={pathName} />
       </div>
       <div className="w-[80%] mx-auto p-4 rounded-lg shadow border-[1px] border-light-grey-clr mb-6">
@@ -215,14 +218,22 @@ const MobileNav = ({
           >
             {navOpen ? <Cross1Icon /> : <HamburgerMenuIcon />}
           </button>
-          <img src={IMAGES.logo} alt="Agroxhub" className="w-[140px] h-auto" />
+          <Link className="w-max" to="/">
+            <img
+              src={IMAGES.logo}
+              alt="Agroxhub"
+              className="w-[140px] h-auto"
+            />
+          </Link>
         </div>
-        <AvatarComp user={user} />
+        <Link to="/profile">
+          <AvatarComp user={user} />
+        </Link>
       </div>
 
       {/* Sidebar small screen */}
       <div
-        className={`fixed top-15 w-full z-10 h-screen bg-black/50 transition-all ${navOpen ? "left-0" : "-left-[100%]"}`}
+        className={`fixed top-15 w-full z-10 h-[100dvh] bg-black/50 transition-all ${navOpen ? "left-0" : "-left-[100%]"}`}
       >
         <div
           className={`w-[300px] border-t-[1px] border-t-light-grey-clr h-full bg-white shadow-lg`}

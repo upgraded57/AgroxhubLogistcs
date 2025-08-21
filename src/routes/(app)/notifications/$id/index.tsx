@@ -97,13 +97,6 @@ function RouteComponent() {
     type = notification.type;
   }
 
-  if (isLoading)
-    return (
-      <div className="w-full h-full">
-        <Pending />
-      </div>
-    );
-
   const NotificationComponent = () => {
     switch (notification?.type) {
       case "orderPlacement":
@@ -117,9 +110,16 @@ function RouteComponent() {
         return;
     }
   };
+
   return (
-    <AppLayout title="Notifications" subtitle="">
-      <NotificationComponent />
+    <AppLayout title="Notification" subtitle="">
+      {isLoading ? (
+        <div className="w-full h-full">
+          <Pending />
+        </div>
+      ) : (
+        <NotificationComponent />
+      )}
     </AppLayout>
   );
 }

@@ -74,7 +74,7 @@ function RouteComponent() {
         </button>
       </form>
       <span className="flex space-x-2">
-        <p className="text-sm">"Don't have an account</p>
+        <p className="text-sm">Don't have an account</p>
         <Link
           to="/auth/register"
           className="text-sm text-dark-green-clr hover:underline"

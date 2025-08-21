@@ -26,7 +26,7 @@ function RouteComponent() {
     data: orders,
     isError,
   } = useGetOrders({
-    status: params.status,
+    status: params.status === "all" ? undefined : params.status,
   });
   return (
     <AppLayout title="Orders" subtitle="See and manage your orders from here">

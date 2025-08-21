@@ -140,7 +140,7 @@ function RouteComponent() {
       {/* Summary */}
       <div className="stats bg-white w-full shadow mb-6">
         <div className="stat">
-          <div className="stat-title">Estimated Delivery Cost</div>
+          <div className="stat-title">Delivery Cost</div>
           <div className="stat-value my-1 font-semibold">
             N {order.deliveryCost.toLocaleString()}
           </div>
@@ -254,7 +254,11 @@ const DeliveryActions = ({
           <button
             className="btn btn-ghost font-normal text-orange-clr border-0 justify-start hover:bg-orange-clr hover:text-white disabled:text-slate-400"
             onClick={() => handleShowModal("transit")}
-            disabled={order.status !== "pending"}
+            disabled={
+              order.status !== "pending" ||
+              !order.pickupDate ||
+              !order.deliveryDate
+            }
           >
             <CheckIcon />
             Transit Order
@@ -264,7 +268,11 @@ const DeliveryActions = ({
           <button
             className="btn btn-ghost font-normal text-dark-green-clr border-0 justify-start hover:bg-dark-green-clr hover:text-white disabled:text-slate-400"
             onClick={() => handleShowModal("complete")}
-            disabled={order.status !== "in_transit"}
+            disabled={
+              order.status !== "in_transit" ||
+              !order.pickupDate ||
+              !order.deliveryDate
+            }
           >
             <CheckIcon />
             Complete Delivery
@@ -275,7 +283,11 @@ const DeliveryActions = ({
           <button
             className="btn btn-ghost font-normal text-red-clr border-0 justify-start hover:bg-red-clr hover:text-white disabled:text-slate-400"
             onClick={() => handleShowModal("reject")}
-            disabled={order.status !== "in_transit"}
+            disabled={
+              order.status !== "in_transit" ||
+              !order.pickupDate ||
+              !order.deliveryDate
+            }
           >
             <Cross2Icon />
             Return Products
@@ -386,6 +398,7 @@ const TransitOrderModal = ({
 };
 
 const CompleteOrderModal = ({ onClose }: { onClose: () => void }) => {
+  const queryClient = useQueryClient();
   const { mutateAsync: completeOrder, isPending } = useCompleteOrder();
   const { orderId } = Route.useParams();
   const handleCompleteOrder = (e: FormEvent<HTMLFormElement>) => {
@@ -404,7 +417,12 @@ const CompleteOrderModal = ({ onClose }: { onClose: () => void }) => {
     completeOrder({
       code,
       orderId,
-    }).then(() => onClose());
+    }).then(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["Orders", orderId],
+      });
+      onClose();
+    });
   };
   return (
     <dialog id="completeModal" className="modal">

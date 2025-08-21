@@ -4,7 +4,10 @@ import { axiosInstance } from "./axiosInstance";
 export const useGetReviews = () => {
   const getReviews = async () => {
     const res = await axiosInstance.get("reviews", { showToast: false });
-    return res.data.reviews as Review[];
+    return {
+      average: res.data.average as number,
+      reviews: res.data.reviews as UserReview[],
+    };
   };
 
   return useQuery({

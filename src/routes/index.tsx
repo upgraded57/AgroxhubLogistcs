@@ -1,10 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import "../App.css";
-import {
-  ArrowRightIcon,
-  StarFilledIcon,
-  StarIcon,
-} from "@radix-ui/react-icons";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import AppLayout from "@/components/layouts/app-layout";
 import SummaryChart from "@/components/charts/summaryChart";
 import EarningsTable from "@/components/tables/earningsTable";
@@ -15,6 +11,9 @@ import { ImSpinner8 } from "react-icons/im";
 import { useGetReviews } from "@/api/reviews";
 import Loader from "@/components/loader";
 import moment from "moment";
+import ProductRatings from "@/components/product-rating";
+import EmptyState from "@/components/empty-state";
+
 export const Route = createFileRoute("/")({
   component: App,
 });
@@ -75,11 +74,11 @@ export function App() {
             <span className="loading loading-spinner" />
           </div>
         ) : (
-          orders && <OrdersTable orders={orders} />
+          orders && <OrdersTable orders={orders.slice(0, 5)} />
         )}
       </div>
 
-      {/* Average Ratings */}
+      {/* Ratings */}
       <Reviews />
     </AppLayout>
   );
@@ -145,7 +144,7 @@ const Summary = () => {
 };
 
 const Reviews = () => {
-  const { isLoading, data: reviews } = useGetReviews();
+  const { isLoading, data } = useGetReviews();
   if (isLoading) {
     return (
       <div className="flex w-full h-[300px] bg-white rounded-lg shadow items-center justify-center mt-6">
@@ -153,37 +152,33 @@ const Reviews = () => {
       </div>
     );
   }
+
+  const reviews = data?.reviews;
+  const average = data?.average;
+
   return (
-    <div className="mt-6 rounded-lg shadow p-4 bg-white">
+    <div className="mt-6 rounded-lg shadow p-4 bg-white mb-6">
       <div className="flex items center justify-between mb-4 ">
         <div className="flex flex-col space-y-2">
           <p className="text-sm font-medium">Recent Orders</p>
           <div className="flex items-center space-x-4">
             <p className="text-sm">Average Rating:</p>
-            <span className="flex items-center space-x-2">
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarFilledIcon className="text-yellow-clr" />
-              <StarIcon className="text-yellow-clr" />
-            </span>
+            <ProductRatings ratings={String(average)} />
           </div>
         </div>
-        <Link
-          to="/orders"
-          search={{
-            status: undefined,
-          }}
-          className="flex items-center space-x-1"
-        >
-          <p className="text-sm underline">See All</p>
-          <ArrowRightIcon />
-        </Link>
+        {reviews && reviews.length > 4 ? (
+          <Link to="/reviews" className="flex items-center space-x-1">
+            <p className="text-sm underline">See All</p>
+            <ArrowRightIcon />
+          </Link>
+        ) : (
+          ""
+        )}
       </div>
       <ul className="list space-y-4">
         {reviews && reviews.length ? (
-          reviews.map((review, idx) => (
-            <li key={idx}>
+          reviews.slice(0, 5).map((review, idx) => (
+            <li key={idx} className="border-b border-b-gray-100 pb-2">
               <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-20">
                 <div className="flex items-center space-x-3">
                   <div className="avatar">
@@ -202,21 +197,13 @@ const Reviews = () => {
 
                 <div className="space-y-2">
                   <p className="text-sm">{review.review}</p>
-                  <span className="flex items-center space-x-2">
-                    <StarFilledIcon className="text-yellow-clr" />
-                    <StarFilledIcon className="text-yellow-clr" />
-                    <StarFilledIcon className="text-yellow-clr" />
-                    <StarFilledIcon className="text-yellow-clr" />
-                    <StarIcon className="text-yellow-clr" />
-                  </span>
+                  <ProductRatings ratings={String(review.rating)} />
                 </div>
               </div>
             </li>
           ))
         ) : (
-          <div className="w-full h-[200px] grid place-content-center">
-            <p>You have no review yet!</p>
-          </div>
+          <EmptyState text="You have no reviews yet!" />
         )}
       </ul>
     </div>
