@@ -58,16 +58,18 @@ export function App() {
               <p className="text-sm font-light">Returned</p>
             </span>
           </div>
-          <Link
-            to="/orders"
-            search={{
-              status: undefined,
-            }}
-            className="flex items-center space-x-1"
-          >
-            <p className="text-sm underline">See All</p>
-            <ArrowRightIcon />
-          </Link>
+          {orders?.length && (
+            <Link
+              to="/orders"
+              search={{
+                status: undefined,
+              }}
+              className="flex items-center space-x-1"
+            >
+              <p className="text-sm underline">See All</p>
+              <ArrowRightIcon />
+            </Link>
+          )}
         </div>
         {isLoading ? (
           <div className="w-full h-[300px]">

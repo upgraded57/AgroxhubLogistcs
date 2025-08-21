@@ -241,9 +241,7 @@ function RouteComponent() {
                   }))
                 }
               >
-                <option value="" disabled>
-                  --Select State --
-                </option>
+                <option value="">--Select State --</option>
                 <option value="Lagos">Lagos</option>
                 <option value="Ogun">Ogun</option>
               </select>

@@ -9,6 +9,7 @@ export const useGetNotifications = () => {
   return useQuery({
     queryKey: ["Notification"],
     queryFn: getNotifications,
+    retry: 2,
   });
 };
 
@@ -23,5 +24,6 @@ export const useGetSingleNotification = (id: string) => {
   return useQuery({
     queryKey: ["Notification", id],
     queryFn: getSingleNotifications,
+    retry: 2,
   });
 };

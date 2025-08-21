@@ -15,6 +15,7 @@ export const useGetOrders = (params?: GetOrdersParams) => {
   return useQuery({
     queryKey: ["Orders", params],
     queryFn: getOrders,
+    retry: 2,
   });
 };
 
@@ -28,6 +29,7 @@ export const useGetSingleOrder = (orderId: string) => {
   return useQuery({
     queryKey: ["Orders", orderId],
     queryFn: getOrders,
+    retry: 2,
   });
 };
 

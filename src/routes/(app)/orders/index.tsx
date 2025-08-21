@@ -1,4 +1,5 @@
 import { useGetOrders } from "@/api/order";
+import EmptyState from "@/components/empty-state";
 import AppLayout from "@/components/layouts/app-layout";
 import Loader from "@/components/loader";
 import OrdersTable from "@/components/tables/ordersTable";
@@ -61,9 +62,7 @@ function RouteComponent() {
             <Loader />
           </div>
         ) : isError || !orders || orders.length === 0 ? (
-          <div className="w-full h-[300px] flex items-center justify-center">
-            <p>No order found!</p>
-          </div>
+          <EmptyState text="No orders found!" />
         ) : (
           <>
             <OrdersTable orders={orders} />

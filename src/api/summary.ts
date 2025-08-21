@@ -10,6 +10,7 @@ export const useGetSummary = () => {
   return useQuery({
     queryKey: ["Summary"],
     queryFn: getSummary,
+    retry: 2,
   });
 };
 
@@ -22,6 +23,7 @@ export const useGetOrdersSummary = () => {
   return useQuery({
     queryKey: ["Summary", "Orders"],
     queryFn: getOrdersSummary,
+    retry: 2,
   });
 };
 
@@ -36,5 +38,6 @@ export const useGetEarningsSummary = () => {
   return useQuery({
     queryKey: ["Summary", "Earnings"],
     queryFn: getEarningsSummary,
+    retry: 2,
   });
 };

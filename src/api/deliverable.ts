@@ -10,6 +10,7 @@ export const useGetDeliverables = () => {
   return useQuery({
     queryKey: ["Deliverables"],
     queryFn: getDeliverables,
+    retry: 2,
   });
 };
 
@@ -24,6 +25,7 @@ export const useGetAllCategories = () => {
   return useQuery({
     queryKey: ["Categories"],
     queryFn: getAllcatCgories,
+    retry: 2,
   });
 };
 

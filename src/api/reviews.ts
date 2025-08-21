@@ -13,5 +13,6 @@ export const useGetReviews = () => {
   return useQuery({
     queryKey: ["Reviews"],
     queryFn: getReviews,
+    retry: 2,
   });
 };

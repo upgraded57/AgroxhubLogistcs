@@ -11,7 +11,7 @@ export const useGetProfile = (token: string) => {
     queryKey: ["Profile"],
     queryFn: getProfile,
     enabled: !!token,
-    retry: false,
+    retry: 2,
   });
 };
 

@@ -10,6 +10,7 @@ export const useGetAllRegions = () => {
   return useQuery({
     queryKey: ["Regions"],
     queryFn: getAllRegions,
+    retry: 2,
   });
 };
 

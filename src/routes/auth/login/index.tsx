@@ -27,7 +27,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col justify-between h-full">
       <span className="space-y-2">
-        <h2 className="font-semibold text-xl">Login</h2>
+        <h2 className="font-semibold text-xl">Welcome back</h2>
         <p className="text-sm">Login to your account</p>
       </span>
       <form className="w-full space-y-6" onSubmit={handleLogin}>
