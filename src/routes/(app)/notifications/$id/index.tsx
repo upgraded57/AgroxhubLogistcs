@@ -4,6 +4,7 @@ import { useGetSingleNotification } from "@/api/notification";
 import Pending from "@/components/pending";
 import AppLayout from "@/components/layouts/app-layout";
 import { FaStar } from "react-icons/fa6";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/(app)/notifications/$id/")({
   component: RouteComponent,
@@ -91,10 +92,22 @@ function RouteComponent() {
     select: (p) => p.id,
   });
 
-  const { isLoading, data: notification } = useGetSingleNotification(id);
+  const queryClient = useQueryClient();
+
+  const {
+    isLoading,
+    data: notification,
+    isSuccess,
+  } = useGetSingleNotification(id);
 
   if (notification) {
     type = notification.type;
+  }
+
+  if (isSuccess) {
+    queryClient.invalidateQueries({
+      queryKey: ["Notification"],
+    });
   }
 
   const NotificationComponent = () => {

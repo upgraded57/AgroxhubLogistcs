@@ -177,7 +177,7 @@ function RouteComponent() {
             <button
               className="btn btn-sm font-normal"
               onClick={() => handleShowModal("deliveryDate")}
-              disabled={order.deliveryDate ? true : false}
+              disabled={order.deliveryDate || !order.pickupDate ? true : false}
             >
               Set delivery date
             </button>
@@ -205,11 +205,13 @@ function RouteComponent() {
         <PickupDateSetModal
           onClose={() => handleCloseModal("pickupDate")}
           orderId={order.id}
+          orderDate={order.createdAt}
         />
         <DeliveryDateSetModal
           onClose={() => handleCloseModal("deliveryDate")}
           orderId={order.id}
           pickupDate={order.pickupDate}
+          orderDate={order.createdAt}
         />
         <BuyerInfoModal
           onClose={() => handleCloseModal("buyer")}
@@ -500,9 +502,11 @@ const RejectOrderModal = ({ onClose }: { onClose: () => void }) => {
 const PickupDateSetModal = ({
   onClose,
   orderId,
+  orderDate,
 }: {
   onClose: () => void;
   orderId: string;
+  orderDate: Date;
 }) => {
   const queryClient = useQueryClient();
   const { mutateAsync: updateDate, isPending } = useUpdateOrderDates();
@@ -540,6 +544,11 @@ const PickupDateSetModal = ({
 
   const currentDate = new Date();
   const today = currentDate.toISOString().split("T")[0];
+  const future = new Date(orderDate);
+  future.setDate(future.getDate() + 7);
+
+  const maxDate = moment(future).format("YYYY-MM-DD");
+
   return (
     <dialog id="pickupDateModal" className="modal">
       <div className="modal-box">
@@ -555,7 +564,7 @@ const PickupDateSetModal = ({
 
         <div className="w-full mt-6">
           <p className="text-sm mb-2">
-            Choose a pickup date between 25/01/2025 and 31/01/2025
+            Choose a pickup date between {today} and {maxDate}
           </p>
           <form className="flex space-x-2" onSubmit={handleSetPickupDate}>
             <input
@@ -564,6 +573,7 @@ const PickupDateSetModal = ({
               id="date"
               className="input w-full"
               min={today}
+              max={maxDate}
             />
             <button
               className="btn font-normal"
@@ -595,10 +605,12 @@ const DeliveryDateSetModal = ({
   onClose,
   orderId,
   pickupDate,
+  orderDate,
 }: {
   onClose: () => void;
   orderId: string;
   pickupDate?: string;
+  orderDate: Date;
 }) => {
   const queryClient = useQueryClient();
   const { mutateAsync: updateDate, isPending } = useUpdateOrderDates();
@@ -636,6 +648,10 @@ const DeliveryDateSetModal = ({
 
   const currentDate = pickupDate ? new Date(pickupDate) : new Date();
   const today = currentDate.toISOString().split("T")[0];
+  const future = new Date(orderDate);
+  future.setDate(future.getDate() + 7);
+  const maxDate = moment(future).format("YYYY-MM-DD");
+
   return (
     <dialog id="deliveryDateModal" className="modal">
       <div className="modal-box">
@@ -651,7 +667,7 @@ const DeliveryDateSetModal = ({
 
         <div className="w-full mt-6">
           <p className="text-sm mb-2">
-            Choose a delivery date between 25/01/2025 and 31/01/2025
+            Choose a delivery date between {pickupDate} and {maxDate}
           </p>
           <form className="flex space-x-2" onSubmit={handleSetDeliveryDate}>
             <input
@@ -660,6 +676,7 @@ const DeliveryDateSetModal = ({
               id="date"
               className="input w-full"
               min={today}
+              max={maxDate}
             />
             <button
               className="btn font-normal"
