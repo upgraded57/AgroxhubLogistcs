@@ -99,6 +99,7 @@ interface NotificationList {
     amount: number;
     createdAt: string;
     deliveryAddress: string;
+    logisticsCost?: int;
     deliveryRegion: {
       state: string;
       lcda: string;
@@ -227,7 +228,8 @@ interface OrderQueryTypes {
 }
 
 interface Summary {
-  balance: number;
+  total_balance: number;
+  withdrawable_balance: number;
   delivered: number;
   in_transit: number;
   pending: number;

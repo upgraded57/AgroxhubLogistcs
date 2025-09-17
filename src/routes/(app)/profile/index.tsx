@@ -392,7 +392,7 @@ const AvatarComp = ({
     </div>
   ) : user?.avatar ? (
     <div className="avatar">
-      <div className="w-16 rounded-full">
+      <div className="w-16 rounded-full bg-slate-100">
         <img src={user.avatar} />
       </div>
     </div>

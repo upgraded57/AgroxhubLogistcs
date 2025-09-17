@@ -1,6 +1,7 @@
 import {
   useCompleteOrder,
   useGetSingleOrder,
+  useReturnOrder,
   useTransitOrder,
   useUpdateOrderDates,
 } from "@/api/order";
@@ -471,6 +472,23 @@ const CompleteOrderModal = ({ onClose }: { onClose: () => void }) => {
 };
 
 const RejectOrderModal = ({ onClose }: { onClose: () => void }) => {
+  const queryClient = useQueryClient();
+  const { mutateAsync: returnOrder, isPending } = useReturnOrder();
+  const { orderId } = Route.useParams();
+  const [reason, setReason] = useState("");
+
+  const handleReturn = () => {
+    returnOrder({
+      reason,
+      orderId,
+    }).then(() => {
+      setReason("");
+      queryClient.invalidateQueries({
+        queryKey: ["Orders", orderId],
+      });
+      onClose();
+    });
+  };
   return (
     <dialog id="rejectModal" className="modal">
       <div className="modal-box">
@@ -483,14 +501,28 @@ const RejectOrderModal = ({ onClose }: { onClose: () => void }) => {
             <Cross2Icon />
           </button>
         </div>
-        <p className="py-4 text-sm">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius quo
-          commodi labore architecto impedit repellendus nemo ea in. Ducimus fuga
-          earum nemo esse quidem consequuntur. Assumenda saepe corporis
-          excepturi dignissimos aliquid autem optio a voluptate unde facere
-          enim, velit facilis molestiae fugit perspiciatis doloribus sapiente
-          laudantium recusandae non. Molestiae, temporibus!
+        <p className="pt-4 pb-2 text-sm">
+          This action should only be carried out if user is not satisfied the
+          products and want to return it.
         </p>
+        <p className="pb-4 text-sm">
+          Please specify below why this order is being returned
+        </p>
+        <textarea
+          name="reason"
+          className="textarea w-full resize-none"
+          rows={5}
+          placeholder="Reason for rejecting order"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        />
+        <button
+          className="btn bg-red-500 text-white shadow-none border-none mt-4"
+          disabled={!reason.length || isPending}
+          onClick={handleReturn}
+        >
+          Return Products
+        </button>
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
@@ -542,12 +574,10 @@ const PickupDateSetModal = ({
     };
   }, [showToast]);
 
-  const currentDate = new Date();
-  const today = currentDate.toISOString().split("T")[0];
   const future = new Date(orderDate);
   future.setDate(future.getDate() + 7);
-
   const maxDate = moment(future).format("YYYY-MM-DD");
+  const minDate = moment(orderDate).format("YYYY-MM-DD");
 
   return (
     <dialog id="pickupDateModal" className="modal">
@@ -564,7 +594,7 @@ const PickupDateSetModal = ({
 
         <div className="w-full mt-6">
           <p className="text-sm mb-2">
-            Choose a pickup date between {today} and {maxDate}
+            Choose a pickup date between {minDate} and {maxDate}
           </p>
           <form className="flex space-x-2" onSubmit={handleSetPickupDate}>
             <input
@@ -572,7 +602,7 @@ const PickupDateSetModal = ({
               name="date"
               id="date"
               className="input w-full"
-              min={today}
+              min={minDate}
               max={maxDate}
             />
             <button
@@ -646,11 +676,10 @@ const DeliveryDateSetModal = ({
     };
   }, [showToast]);
 
-  const currentDate = pickupDate ? new Date(pickupDate) : new Date();
-  const today = currentDate.toISOString().split("T")[0];
   const future = new Date(orderDate);
   future.setDate(future.getDate() + 7);
   const maxDate = moment(future).format("YYYY-MM-DD");
+  const minDate = moment(pickupDate).format("YYYY-MM-DD");
 
   return (
     <dialog id="deliveryDateModal" className="modal">
@@ -667,7 +696,7 @@ const DeliveryDateSetModal = ({
 
         <div className="w-full mt-6">
           <p className="text-sm mb-2">
-            Choose a delivery date between {pickupDate} and {maxDate}
+            Choose a delivery date between {minDate} and {maxDate}
           </p>
           <form className="flex space-x-2" onSubmit={handleSetDeliveryDate}>
             <input
@@ -675,7 +704,7 @@ const DeliveryDateSetModal = ({
               name="date"
               id="date"
               className="input w-full"
-              min={today}
+              min={minDate}
               max={maxDate}
             />
             <button

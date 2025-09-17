@@ -148,7 +148,6 @@ const NavLinks = ({
               {item.title}
             </p>
             {item.href.includes("notification") &&
-            pathName !== "/notifications" &&
             notifications &&
             notifications.filter((n) => n.unread).length ? (
               <span className="w-5 h-5 aspect-square bg-orange-clr rounded-full flex items-center justify-center text-xs text-white font-semibold">
@@ -245,72 +244,6 @@ const MobileNav = ({
   );
 };
 
-// const EarlyAccessNotice = () => {
-//   const [showNotice, setShowNotice] = useState(
-//     !!sessionStorage.getItem("closeNotice")
-//   );
-//   return (
-//     !showNotice && (
-//       <>
-//         <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2 border-b border-b-black">
-//           <ExclamationTriangleIcon />
-//           <p className="text-sm">Early Access.</p>
-//           <p
-//             className="text-sm underline cursor-pointer"
-//             onClick={() =>
-//               (
-//                 document.getElementById("earlyAccessModal") as HTMLDialogElement
-//               ).showModal()
-//             }
-//           >
-//             Learn More
-//           </p>
-
-//           <button
-//             className="btn btn-xs shadow-none bg-transparent border-none btn-square absolute right-2"
-//             onClick={() => {
-//               sessionStorage.setItem("closeNotice", "1");
-//               setShowNotice(true);
-//             }}
-//           >
-//             <Cross1Icon className="text-base-content" />
-//           </button>
-//         </div>
-
-//         {/* Early access dialog */}
-//         <dialog id="earlyAccessModal" className="modal">
-//           <div className="modal-box">
-//             <h3 className="font-semibold text-lg">Early Access!</h3>
-//             <p className="py-4 text-sm">
-//               This is the early access version of the app. Some pages may
-//               contain placeholder texts with dummy data and some functionalities
-//               may not work. Features will continue to roll out, so check out
-//               often!
-//             </p>
-//             <p className="py-4 text-sm">
-//               We welcome suggestions! Reach out to us at{" "}
-//               <a
-//                 href="mailto:developer@agroxhub.com"
-//                 target="_blank"
-//                 className="font-medium underline"
-//               >
-//                 developer@agroxhub.com
-//               </a>{" "}
-//               to submit a suggestion
-//             </p>
-//             <div className="modal-action">
-//               <form method="dialog">
-//                 {/* if there is a button in form, it will close the modal */}
-//                 <button className="btn">Close</button>
-//               </form>
-//             </div>
-//           </div>
-//         </dialog>
-//       </>
-//     )
-//   );
-// };
-
 const NewNotificationNotice = () => {
   const [showNotifNotice, setShowNotifNotice] = useState(
     !!sessionStorage.getItem("closeNotifNotice")
@@ -326,7 +259,7 @@ const NewNotificationNotice = () => {
         <div className="h-8 w-full flex items-center justify-center bg-yellow-600 text-white gap-2 relative">
           <SpeakerLoudIcon />
           <p className="text-sm">
-            You have {notifications.filter((n) => n.unread).length} new
+            You have {notifications.filter((n) => n.unread).length} unread
             notifications.
           </p>
           <Link

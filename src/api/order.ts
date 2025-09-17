@@ -62,3 +62,12 @@ export const useCompleteOrder = () => {
       }),
   });
 };
+
+export const useReturnOrder = () => {
+  return useMutation({
+    mutationFn: (data: { reason: string; orderId: string }) =>
+      axiosInstance.patch(`/orders/${data.orderId}/return`, {
+        reason: data.reason,
+      }),
+  });
+};

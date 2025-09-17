@@ -105,8 +105,17 @@ const Summary = () => {
       query: "delivered",
     },
     {
-      title: "Available Balance",
-      count: summary?.balance ? "N" + summary.balance.toLocaleString() : 0,
+      title: "Total Balance",
+      count: summary?.total_balance
+        ? "N" + summary.total_balance.toLocaleString()
+        : 0,
+      isTotal: true,
+    },
+    {
+      title: "Withdrawable Balance",
+      count: summary?.withdrawable_balance
+        ? "N" + summary.withdrawable_balance.toLocaleString()
+        : 0,
     },
   ];
 
@@ -117,7 +126,9 @@ const Summary = () => {
         return (
           <div className="stat min-w-[200px]" key={idx}>
             <div className="stat-title">{item.title}</div>
-            <div className="stat-value text-dark-green-clr my-1 pl-2">
+            <div
+              className={`stat-value my-1 pl-2 ${item.isTotal ? "text-gray-500" : "text-dark-green-clr"}`}
+            >
               {isLoading ? (
                 <ImSpinner8 className="animate-spin text-xl my-2" />
               ) : (

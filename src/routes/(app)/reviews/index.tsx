@@ -24,8 +24,8 @@ function RouteComponent() {
           {reviews && reviews.length ? (
             reviews.map((review, idx) => (
               <li key={idx}>
-                <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-20 bg-white p-4 rounded-xl shadow">
-                  <div className="flex items-center space-x-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 items-start gap-4 lg:gap-20 bg-white p-4 rounded-xl shadow">
+                  <div className="flex items-center space-x-3 md:col-span-1">
                     <div className="avatar">
                       <div className="w-12 rounded-full">
                         <img
@@ -40,7 +40,7 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <p className="text-sm">{review.review}</p>
                     <ProductRatings ratings={String(review.rating)} />
                   </div>

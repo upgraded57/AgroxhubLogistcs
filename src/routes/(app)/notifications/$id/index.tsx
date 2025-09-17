@@ -186,11 +186,11 @@ const OrderAssignmentNotification = ({
 
             <div className="grid grid-cols-7 gap-x-2">
               <div className="col-span-2">
-                <p className="text-slate-400 text-sm">Total Amount</p>
+                <p className="text-slate-400 text-sm">Logistics Amount</p>
               </div>
               <div className="col-span-5">
                 <p className="font-semibold text-sm">
-                  N {notification.order?.amount.toLocaleString()}
+                  N {notification.order?.logisticsCost?.toLocaleString()}
                 </p>
               </div>
             </div>
