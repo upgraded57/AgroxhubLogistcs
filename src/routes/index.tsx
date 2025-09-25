@@ -13,6 +13,7 @@ import Loader from "@/components/loader";
 import moment from "moment";
 import ProductRatings from "@/components/product-rating";
 import EmptyState from "@/components/empty-state";
+import { currency } from "@/utils/helpers";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -106,15 +107,13 @@ const Summary = () => {
     },
     {
       title: "Total Balance",
-      count: summary?.total_balance
-        ? "N" + summary.total_balance.toLocaleString()
-        : 0,
+      count: summary?.total_balance ? currency(summary.total_balance) : 0,
       isTotal: true,
     },
     {
       title: "Withdrawable Balance",
       count: summary?.withdrawable_balance
-        ? "N" + summary.withdrawable_balance.toLocaleString()
+        ? currency(summary.withdrawable_balance)
         : 0,
     },
   ];

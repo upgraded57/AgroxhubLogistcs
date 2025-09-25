@@ -5,6 +5,7 @@ import Pending from "@/components/pending";
 import AppLayout from "@/components/layouts/app-layout";
 import { FaStar } from "react-icons/fa6";
 import { useQueryClient } from "@tanstack/react-query";
+import { currency } from "@/utils/helpers";
 
 export const Route = createFileRoute("/(app)/notifications/$id/")({
   component: RouteComponent,
@@ -190,7 +191,7 @@ const OrderAssignmentNotification = ({
               </div>
               <div className="col-span-5">
                 <p className="font-semibold text-sm">
-                  N {notification.order?.logisticsCost?.toLocaleString()}
+                  {currency(notification.order?.logisticsCost)}
                 </p>
               </div>
             </div>

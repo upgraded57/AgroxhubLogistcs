@@ -10,6 +10,7 @@ import AppLayout from "@/components/layouts/app-layout";
 import Pending from "@/components/pending";
 import { StatusBadge } from "@/components/status-badge";
 import OrderTable from "@/components/tables/orderTable";
+import { currency } from "@/utils/helpers";
 
 import {
   AvatarIcon,
@@ -143,7 +144,7 @@ function RouteComponent() {
         <div className="stat">
           <div className="stat-title">Delivery Cost</div>
           <div className="stat-value my-1 font-semibold">
-            N {order.deliveryCost.toLocaleString()}
+            {currency(order.deliveryCost)}
           </div>
           <div className="stat-desc">
             Estimated travel distance -

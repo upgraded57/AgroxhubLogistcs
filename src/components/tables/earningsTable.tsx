@@ -1,5 +1,6 @@
 import { useGetEarningsSummary } from "@/api/summary";
 import Loader from "../loader";
+import { currency } from "@/utils/helpers";
 
 export default function EarningsTable() {
   const { isLoading, data: summary } = useGetEarningsSummary();
@@ -21,7 +22,7 @@ export default function EarningsTable() {
             {summary?.map((item, idx) => (
               <tr key={idx}>
                 <td>{item.month}</td>
-                <td className="text-right">N{item.total.toLocaleString()}</td>
+                <td className="text-right">{currency(item.total)}</td>
               </tr>
             ))}
           </tbody>
